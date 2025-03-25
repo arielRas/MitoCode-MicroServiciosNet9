@@ -1,21 +1,22 @@
 ﻿using FastBuy.Products.Entities;
+using FastBuy.Products.Entities.Configuration;
 using FastBuy.Products.Repositories.Abstractions;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 namespace FastBuy.Products.Repositories.Implementations
 {
     public class ProductRepository : IProductRepository
     {
-        private readonly IMongoDatabase _mongoDataBase;
         private readonly IMongoCollection<Product> _dbCollection;
         private readonly FilterDefinitionBuilder<Product> _filterDefinitionBuilder = Builders<Product>.Filter;
-        private const string collectionName = "products";
         
 
-        public ProductRepository(IMongoDatabase mongoDataBase)
+        public ProductRepository(IMongoDatabase mongoDataBase, IOptions<ServiceSettings> settings)
         {
-            _mongoDataBase = mongoDataBase;
+            _dbCollection = mongoDataBase.GetCollection<Product>(settings.Value.ServiceName);
         }
+
 
         public async Task<Product> GetByIdAsync(Guid id)
         {
@@ -25,8 +26,12 @@ namespace FastBuy.Products.Repositories.Implementations
                 ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
         }
 
+
         public async Task<IReadOnlyCollection<Product>> GetAllAsync()
-            => await _dbCollection.Find(_filterDefinitionBuilder.Empty).ToListAsync();
+        {
+            return await _dbCollection.Find(_filterDefinitionBuilder.Empty).ToListAsync();
+        }
+
 
         public async Task<Product> CreateAsync(Product product)
         {
@@ -34,6 +39,7 @@ namespace FastBuy.Products.Repositories.Implementations
 
             return product;
         }
+
 
         public async Task UpdateAsync(Guid id, Product product)
         {
