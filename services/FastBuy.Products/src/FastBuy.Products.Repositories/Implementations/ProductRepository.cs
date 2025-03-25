@@ -37,14 +37,18 @@ namespace FastBuy.Products.Repositories.Implementations
 
         public async Task UpdateAsync(Guid id, Product product)
         {
-            FilterDefinition<Product> filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
+            var filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
 
-            await _dbCollection.ReplaceOneAsync(filter, product);
+            var update = Builders<Product>.Update.Set(p => p.Name, product.Name)
+                                                 .Set(p => p.Description, product.Description)
+                                                 .Set(p => p.Price, product.Price);
+
+            await _dbCollection.UpdateOneAsync(filter, update);
         }
 
         public async Task DeleteAsync(Guid id)
         {
-            FilterDefinition<Product> filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
+            var filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
 
             await _dbCollection.DeleteOneAsync(filter);
         }
