@@ -11,4 +11,9 @@
     <PackageReference Include="swashbuckle.aspnetcore" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Products.Contracts\FastBuy.Products.Contracts.csproj" />
+    <ProjectReference Include="..\FastBuy.Products.Services\FastBuy.Products.Services.csproj" />
+  </ItemGroup>
+
 </Project>

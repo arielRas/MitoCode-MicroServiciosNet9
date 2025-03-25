@@ -43,14 +43,17 @@ namespace FastBuy.Products.Repositories.Implementations
                                                  .Set(p => p.Description, product.Description)
                                                  .Set(p => p.Price, product.Price);
 
-            await _dbCollection.UpdateOneAsync(filter, update);
+            var result = await _dbCollection.FindOneAndUpdateAsync(filter, update)
+                ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
+                
         }
 
         public async Task DeleteAsync(Guid id)
         {
             var filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
 
-            await _dbCollection.DeleteOneAsync(filter);
+            var result = await _dbCollection.FindOneAndDeleteAsync(filter)
+                ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");                
         }
     }
 }
