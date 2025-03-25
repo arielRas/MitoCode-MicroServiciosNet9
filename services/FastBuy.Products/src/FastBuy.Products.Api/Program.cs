@@ -1,4 +1,6 @@
 
+using FastBuy.Products.Api.Middlewares;
+
 namespace FastBuy.Products.Api;
 
 public class Program
@@ -9,7 +11,6 @@ public class Program
 
         builder.Services.AddApplicactionServices(builder.Configuration)
                         .AddPresentation();
-
         
 
         var app = builder.Build();
@@ -22,6 +23,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseMiddleware<GlobalExceptionMiddleware>();
 
         app.UseAuthorization();
 
