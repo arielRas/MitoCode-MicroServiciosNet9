@@ -2,7 +2,7 @@
 
 namespace FastBuy.Products.Entities;
 
-public class Products
+public class Product
 {
     [Key]
     public Guid Id { get; set; }

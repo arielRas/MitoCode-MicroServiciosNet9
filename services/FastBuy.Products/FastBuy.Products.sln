@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Products.Contracts"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Products.Entities", "src\FastBuy.Products.Entities\FastBuy.Products.Entities.csproj", "{A1A8577A-5127-42B4-8B75-967BDD48ACCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Products.Repositories", "src\FastBuy.Products.Repositories\FastBuy.Products.Repositories.csproj", "{ABD06726-5B19-4516-8736-7A348A742C2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{A1A8577A-5127-42B4-8B75-967BDD48ACCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1A8577A-5127-42B4-8B75-967BDD48ACCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1A8577A-5127-42B4-8B75-967BDD48ACCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ABD06726-5B19-4516-8736-7A348A742C2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ABD06726-5B19-4516-8736-7A348A742C2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ABD06726-5B19-4516-8736-7A348A742C2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ABD06726-5B19-4516-8736-7A348A742C2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
