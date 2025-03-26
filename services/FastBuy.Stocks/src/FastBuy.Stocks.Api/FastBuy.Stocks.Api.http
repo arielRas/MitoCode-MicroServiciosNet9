@@ -1,0 +1,6 @@
+@FastBuy.Stocks.Api_HostAddress = http://localhost:5017
+
+GET {{FastBuy.Stocks.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
