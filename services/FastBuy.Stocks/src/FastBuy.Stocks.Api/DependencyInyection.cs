@@ -9,6 +9,13 @@ namespace FastBuy.Stocks.Api
             //Settings registration
             services.Configure<ServiceSettings>(configuration.GetSection(nameof(ServiceSettings)));
 
+            //MongoDb Serializaer            
+
+            //MonogDb service registration
+            
+
+
+
             return services;
         }
 

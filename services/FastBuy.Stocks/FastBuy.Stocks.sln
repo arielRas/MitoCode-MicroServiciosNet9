@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Api", "src\FastBuy.Stocks.Api\FastBuy.Stocks.Api.csproj", "{37A36B5F-C380-4FE4-80F4-8BCF77923F85}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Contracts", "src\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj", "{99D4E26B-F4AB-425F-902C-4C59BDC977C3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Entities", "src\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj", "{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Repositories", "src\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj", "{EBC8572F-1A65-4E79-BCE6-876683147B51}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
