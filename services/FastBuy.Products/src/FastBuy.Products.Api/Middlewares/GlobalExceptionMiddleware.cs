@@ -41,7 +41,7 @@ namespace FastBuy.Products.Api.Middlewares
             var error = new
             {
                 TimeStamp = DateTime.UtcNow,
-                Path = context.Request.Path,
+                Path = context.Request.Path.Value,
                 Status = context.Response.StatusCode,
                 Description = context.Response.StatusCode != 500
                               ? ex.Message
