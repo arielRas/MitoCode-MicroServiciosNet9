@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Entities", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Repositories", "src\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj", "{EBC8572F-1A65-4E79-BCE6-876683147B51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Services", "src\FastBuy.Stocks.Services\FastBuy.Stocks.Services.csproj", "{D7102534-E42F-4029-A2FC-4F35A3522DDD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBC8572F-1A65-4E79-BCE6-876683147B51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7102534-E42F-4029-A2FC-4F35A3522DDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7102534-E42F-4029-A2FC-4F35A3522DDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7102534-E42F-4029-A2FC-4F35A3522DDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7102534-E42F-4029-A2FC-4F35A3522DDD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

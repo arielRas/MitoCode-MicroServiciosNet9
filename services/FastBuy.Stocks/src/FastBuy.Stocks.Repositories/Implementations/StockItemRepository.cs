@@ -18,10 +18,19 @@ namespace FastBuy.Stocks.Repositories.Implementations
 
         public async Task<StockItem> GetByIdAsync(Guid id)
         {
-            FilterDefinition<StockItem> filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
+            FilterDefinition<StockItem> filter = _filterDefinitionBuilder.Eq(s => s.Id, id);
 
             return await _dbCollection.Find(filter).FirstOrDefaultAsync()
                 ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
+        }
+
+
+        public async Task<StockItem> GetByProductIdAsync(Guid ProductId)
+        {    
+            FilterDefinition<StockItem> filter = _filterDefinitionBuilder.Eq(s => s.ProductId, ProductId);
+
+            return await _dbCollection.Find(filter).FirstOrDefaultAsync()
+                ?? throw new KeyNotFoundException($"The resource with producId {ProductId} does not exist");
         }
 
 
@@ -45,15 +54,6 @@ namespace FastBuy.Stocks.Repositories.Implementations
 
             var result = await _dbCollection.FindOneAndReplaceAsync(filter, stockItem)
                 ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
-        }
-
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var filter = _filterDefinitionBuilder.Eq(p => p.Id, id);
-
-            var result = await _dbCollection.FindOneAndDeleteAsync(filter)
-                ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
-        }        
+        }      
     }
 }
