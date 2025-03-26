@@ -16,21 +16,12 @@ namespace FastBuy.Stocks.Repositories.Implementations
             _dbCollection = database.GetCollection<StockItem>(settings.Value.ServiceName);
         }
 
-        public async Task<StockItem> GetByIdAsync(Guid id)
-        {
-            FilterDefinition<StockItem> filter = _filterDefinitionBuilder.Eq(s => s.Id, id);
-
-            return await _dbCollection.Find(filter).FirstOrDefaultAsync()
-                ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
-        }
-
 
         public async Task<StockItem> GetByProductIdAsync(Guid ProductId)
         {    
             FilterDefinition<StockItem> filter = _filterDefinitionBuilder.Eq(s => s.ProductId, ProductId);
 
-            return await _dbCollection.Find(filter).FirstOrDefaultAsync()
-                ?? throw new KeyNotFoundException($"The resource with producId {ProductId} does not exist");
+            return await _dbCollection.Find(filter).FirstOrDefaultAsync();
         }
 
 

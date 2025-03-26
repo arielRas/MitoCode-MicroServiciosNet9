@@ -1,6 +1,8 @@
 ﻿using FastBuy.Stocks.Contracts;
+using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Repositories.Abstractions;
 using FastBuy.Stocks.Services.Abstractions;
+using FastBuy.Stocks.Services.Mappers;
 using Microsoft.Extensions.Logging;
 
 namespace FastBuy.Stocks.Services.Implementations
@@ -16,33 +18,71 @@ namespace FastBuy.Stocks.Services.Implementations
             _logger = logger;
         }
 
-        public Task<IEnumerable<StockResponseDto>> GetAllAsync()
+        public async Task<IEnumerable<StockResponseDto>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            try
+            {
+                var stockItems = await _repository.GetAllAsync();
+
+                return stockItems.Select(s => s.ToDto());
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
-        public Task<StockResponseDto> GetByIdAsync(Guid id)
+        public async Task<StockResponseDto> GetByProductIdAsync(Guid productId)
         {
-            throw new NotImplementedException();
+            var stockItem = await _repository.GetByProductIdAsync(productId)
+                ?? throw new KeyNotFoundException($"The resource with id {productId} does not exist"); ;
+
+            return stockItem.ToDto();
         }
 
 
-        public Task<StockResponseDto> GetByProductIdAsync(Guid productId)
+        public async Task<bool> SetStockAsync(Guid productId, int stock)
         {
-            throw new NotImplementedException();
+
+            var stockItem = await _repository.GetByProductIdAsync(productId);
+
+            if (stockItem is null)
+            {
+                stockItem = new StockItem
+                {
+                    Id = Guid.NewGuid(),
+                    ProductId = productId,
+                    Stock = stock,
+                    LastUpdate = DateTime.UtcNow
+                };
+
+                await _repository.CreateAsync(stockItem);
+            }
+            else
+            {  
+                stockItem.Stock = stock;
+                stockItem.LastUpdate = DateTime.UtcNow;
+                await _repository.UpdateAsync(productId, stockItem);
+            }
+
+            return true;
         }
 
 
-        public Task<bool> SetStockAsync(Guid productId, int stock)
+        public async Task<bool> DecreaseStockAsync(StockDecreaseRequestDto stockDecreaseDto)
         {
-            throw new NotImplementedException();
-        }
+            var stockItem = await _repository.GetByProductIdAsync(stockDecreaseDto.ProductId);
 
+            if(stockItem is null) return false;
 
-        public Task<bool> DecreaseStockAsync(StockDecreaseRequestDto stockDecreaseDto)
-        {
-            throw new NotImplementedException();
+            if(stockItem.Stock < stockDecreaseDto.Quantity) return false;
+
+            stockItem.Stock -= stockDecreaseDto.Quantity;
+
+            await _repository.UpdateAsync(stockDecreaseDto.ProductId, stockItem);
+
+            return true;
         }
     }
 }
