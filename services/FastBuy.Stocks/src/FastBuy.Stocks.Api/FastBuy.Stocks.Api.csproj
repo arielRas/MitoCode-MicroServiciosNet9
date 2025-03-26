@@ -11,4 +11,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
+  </ItemGroup>
+
 </Project>

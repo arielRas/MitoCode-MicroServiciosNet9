@@ -7,7 +7,8 @@ namespace FastBuy.Stocks.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddPresentation();
+            builder.Services.AddApplicationServices(builder.Configuration)
+                            .AddPresentation();
 
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
             builder.Services.AddOpenApi();

@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Api", "src\F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Contracts", "src\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj", "{99D4E26B-F4AB-425F-902C-4C59BDC977C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Stocks.Entities", "src\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj", "{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{99D4E26B-F4AB-425F-902C-4C59BDC977C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99D4E26B-F4AB-425F-902C-4C59BDC977C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99D4E26B-F4AB-425F-902C-4C59BDC977C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CE248B-BF9C-4418-B3B0-5DD7520ACC6F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
