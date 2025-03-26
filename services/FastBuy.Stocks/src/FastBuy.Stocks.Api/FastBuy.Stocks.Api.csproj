@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
+    <ProjectReference Include="..\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj" />
+    <ProjectReference Include="..\FastBuy.Stocks.Services\FastBuy.Stocks.Services.csproj" />
   </ItemGroup>
 
 </Project>

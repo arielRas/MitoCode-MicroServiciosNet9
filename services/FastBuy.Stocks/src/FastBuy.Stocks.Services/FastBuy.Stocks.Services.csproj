@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj" />
+    <ProjectReference Include="..\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>
