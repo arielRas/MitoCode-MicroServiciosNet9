@@ -1,4 +1,5 @@
-﻿using FastBuy.Stocks.Entities;
+﻿using FastBuy.Stocks.Contracts;
+using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Entities.Configuration;
 using FastBuy.Stocks.Repositories.Abstractions;
 using Microsoft.Extensions.Options;
@@ -45,6 +46,17 @@ namespace FastBuy.Stocks.Repositories.Implementations
 
             var result = await _dbCollection.FindOneAndReplaceAsync(filter, stockItem)
                 ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
-        }      
+        }
+
+        public async Task UpdateStockAsync(StockItem stockItem)
+        {
+            var filter = _filterDefinitionBuilder.Eq(p => p.ProductId, stockItem.ProductId);
+
+            var update = Builders<StockItem>.Update.Set(s => s.Stock, stockItem.Stock)
+                                                   .Set(s => s.LastUpdate, stockItem.LastUpdate);
+            
+            var result = await _dbCollection.FindOneAndUpdateAsync(filter, update)
+                ?? throw new KeyNotFoundException($"The resource with id {stockItem.ProductId} does not exist");
+        }
     }
 }

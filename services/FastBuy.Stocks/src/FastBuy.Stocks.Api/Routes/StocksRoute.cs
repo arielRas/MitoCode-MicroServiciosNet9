@@ -15,7 +15,7 @@ namespace FastBuy.Stocks.Api.Routes
 
             group.MapPost("/{id:Guid}", SetStock);
 
-            group.MapPut("", DecreaseStock);
+            group.MapPatch("", DecreaseStock);
 
             return app;
         }
