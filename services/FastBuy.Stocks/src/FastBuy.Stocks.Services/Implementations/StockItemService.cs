@@ -80,6 +80,8 @@ namespace FastBuy.Stocks.Services.Implementations
 
             stockItem.Stock -= stockDecreaseDto.Quantity;
 
+            stockItem.LastUpdate = DateTimeOffset.UtcNow;
+
             await _repository.UpdateAsync(stockDecreaseDto.ProductId, stockItem);
 
             return true;
