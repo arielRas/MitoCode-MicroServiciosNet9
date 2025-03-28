@@ -1,5 +1,6 @@
 ﻿using FastBuy.Stocks.Contracts;
 using FastBuy.Stocks.Services.Abstractions;
+using FastBuy.Stocks.Services.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBuy.Stocks.Api.Routes
@@ -20,12 +21,14 @@ namespace FastBuy.Stocks.Api.Routes
             return app;
         }
 
-        private static async Task<IResult> GetById([FromRoute] Guid id, IStockItemService service)
+        private static async Task<IResult> GetById([FromRoute] Guid id, IStockItemService service, ProductsClient productClient)
         {
             if(id == Guid.Empty)
                 return Results.BadRequest("The id field cannot be empty or null");
 
-            var stockItem = await service.GetByProductIdAsync(id);
+            var productinfo = await productClient.GetProductByIdAsync(id);
+
+            var stockItem = await service.GetByProductIdAsync(id, productinfo);
 
             return Results.Ok(stockItem);
         }

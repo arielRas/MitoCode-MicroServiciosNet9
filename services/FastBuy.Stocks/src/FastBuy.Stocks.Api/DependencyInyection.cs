@@ -2,6 +2,7 @@
 using FastBuy.Stocks.Repositories.Abstractions;
 using FastBuy.Stocks.Repositories.Implementations;
 using FastBuy.Stocks.Services.Abstractions;
+using FastBuy.Stocks.Services.Clients;
 using FastBuy.Stocks.Services.Implementations;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -27,16 +28,23 @@ namespace FastBuy.Stocks.Api
             services.AddSingleton<IMongoDatabase>(serviceProvider =>
             {
                 var settings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
-                    ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file."); ;
+                    ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
 
                 return serviceProvider.GetRequiredService<IMongoClient>()
                                       .GetDatabase(settings.ServiceName);
             });
 
+            //HttpClients registration
+            services.AddHttpClient<ProductsClient>(client =>
+            {
+                client.BaseAddress = new Uri(configuration.GetSection("Urls:ProductsUrl").Value 
+                    ?? throw new ArgumentException($"The ProductsUrl key has not been configured in the configuration file."));
+            });
+
+
             //Service registration
             services.AddScoped<IStockItemRepository, StockItemRepository>();
-            services.AddScoped<IStockItemService, StockItemService>();
-
+            services.AddScoped<IStockItemService, StockItemService>();           
 
 
             return services;

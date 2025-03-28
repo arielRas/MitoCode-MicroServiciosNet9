@@ -18,27 +18,13 @@ namespace FastBuy.Stocks.Services.Implementations
             _logger = logger;
         }
 
-        public async Task<IEnumerable<StockResponseDto>> GetAllAsync()
-        {
-            try
-            {
-                var stockItems = await _repository.GetAllAsync();
 
-                return stockItems.Select(s => s.ToDto());
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
-
-        public async Task<StockResponseDto> GetByProductIdAsync(Guid productId)
+        public async Task<StockResponseDto> GetByProductIdAsync(Guid productId, ProductInfoDto productInfo)
         {
             var stockItem = await _repository.GetByProductIdAsync(productId)
                 ?? throw new KeyNotFoundException($"The resource with id {productId} does not exist"); ;
 
-            return stockItem.ToDto();
+            return stockItem.ToDto(productInfo);
         }
 
 

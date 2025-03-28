@@ -3,9 +3,8 @@
 namespace FastBuy.Stocks.Services.Abstractions
 {
     public interface IStockItemService
-    {
-        Task<IEnumerable<StockResponseDto>> GetAllAsync();
-        Task<StockResponseDto> GetByProductIdAsync(Guid productId);
+    {       
+        Task<StockResponseDto> GetByProductIdAsync(Guid productId, ProductInfoDto productInfo);
         Task<bool> SetStockAsync(Guid productId, int stock);
         Task<bool> DecreaseStockAsync(StockDecreaseRequestDto stockDecreaseDto);
     }
