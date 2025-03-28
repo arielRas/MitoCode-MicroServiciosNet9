@@ -7,6 +7,9 @@ using FastBuy.Stocks.Services.Implementations;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Polly;
+using Polly.Extensions.Http;
+using Polly.Timeout;
 
 namespace FastBuy.Stocks.Api
 {
@@ -34,12 +37,31 @@ namespace FastBuy.Stocks.Api
                                       .GetDatabase(settings.ServiceName);
             });
 
+            //Recielence policy
+            var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromSeconds(3), TimeoutStrategy.Pessimistic);
+
+            var randomJitter = new Random();
+
+            var retryPolicy = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .Or<TimeoutRejectedException>()
+                .WaitAndRetryAsync(
+                    retryCount: 3,
+                    sleepDurationProvider: retryAtempt =>
+                        TimeSpan.FromSeconds(Math.Pow(2, retryAtempt)) +
+                        TimeSpan.FromMicroseconds(randomJitter.Next(0,100)),
+                    onRetry: (outcome, timespan, retryAttempt, context) =>
+                        Console.WriteLine($"[RETRY] Attempt {retryAttempt} failed, retrying in {timespan.TotalSeconds} seconds")                
+                );
+
             //HttpClients registration
             services.AddHttpClient<ProductsClient>(client =>
             {
                 client.BaseAddress = new Uri(configuration.GetSection("Urls:ProductsUrl").Value 
                     ?? throw new ArgumentException($"The ProductsUrl key has not been configured in the configuration file."));
-            });
+            })
+            .AddPolicyHandler(retryPolicy)
+            .AddPolicyHandler(timeoutPolicy);
 
 
             //Service registration
