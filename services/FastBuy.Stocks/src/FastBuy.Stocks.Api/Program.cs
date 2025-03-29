@@ -1,3 +1,4 @@
+using FastBuy.Stocks.Api.Extensions;
 using FastBuy.Stocks.Api.Middlewares;
 using FastBuy.Stocks.Api.Routes;
 
