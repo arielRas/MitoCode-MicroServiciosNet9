@@ -3,7 +3,7 @@ using FastBuy.Products.Repositories.Abstractions;
 using FastBuy.Products.Repositories.Implementations;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Implementation;
-using MassTransit;
+using FastBuy.Shared.Library.Messaging;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
@@ -39,22 +39,7 @@ namespace FastBuy.Products.Api
 
 
             //MassTransint and RabbitMq registration
-            services.AddMassTransit(configure =>
-            {
-                configure.UsingRabbitMq((context, configurator) =>
-                {
-                    configurator.Host(brockerSetting.Host);
-
-                    configurator.ConfigureEndpoints(
-                        context,
-                        new KebabCaseEndpointNameFormatter(
-                            prefix: serviceSetting.ServiceName,
-                            includeNamespace: false
-                        )
-                    );
-
-                });
-            });
+            services.AddMessageBroker(configuration);
 
 
             //Service registration
