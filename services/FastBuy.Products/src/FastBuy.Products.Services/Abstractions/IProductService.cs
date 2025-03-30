@@ -1,5 +1,4 @@
-﻿using FastBuy.Products.Contracts;
-using FastBuy.Products.Entities;
+﻿using FastBuy.Products.Contracts.DTOs;
 
 namespace FastBuy.Products.Services.Abstractions
 {

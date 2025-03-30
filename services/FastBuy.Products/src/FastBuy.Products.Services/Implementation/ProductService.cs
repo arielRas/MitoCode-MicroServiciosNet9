@@ -1,4 +1,4 @@
-﻿using FastBuy.Products.Contracts;
+﻿using FastBuy.Products.Contracts.DTOs;
 using FastBuy.Products.Repositories.Abstractions;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Mappers;

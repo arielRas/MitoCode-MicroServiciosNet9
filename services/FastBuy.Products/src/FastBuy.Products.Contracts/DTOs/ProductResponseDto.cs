@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace FastBuy.Products.Contracts
+namespace FastBuy.Products.Contracts.DTOs
 {
     public record ProductResponseDto : ProductRequestDto
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace FastBuy.Products.Contracts
+namespace FastBuy.Products.Contracts.DTOs
 {
     public record ProductRequestDto
     {
