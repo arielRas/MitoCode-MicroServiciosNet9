@@ -3,10 +3,8 @@ using FastBuy.Products.Repositories.Abstractions;
 using FastBuy.Products.Repositories.Implementations;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Implementation;
+using FastBuy.Shared.Library.Databases;
 using FastBuy.Shared.Library.Messaging;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 
 namespace FastBuy.Products.Api
 {
@@ -25,22 +23,11 @@ namespace FastBuy.Products.Api
             //Settings registration
             services.Configure<ServiceSettings>(configuration.GetSection(nameof(ServiceSettings)));
 
-            //MongoDb Serializer
-            BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
-            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
-
-            //MongoDb Service registration
-            services.AddSingleton<IMongoClient>(serviceProvider =>
-                new MongoClient(configuration.GetConnectionString("DefaultConnection")));
-
-            services.AddSingleton<IMongoDatabase>(serviceProvider =>
-                serviceProvider.GetRequiredService<IMongoClient>()
-                               .GetDatabase(serviceSetting.ServiceName));
-
+            //MongoDb service registration
+            services.AddMongoDb(configuration);
 
             //MassTransint and RabbitMq registration
             services.AddMessageBroker(configuration);
-
 
             //Service registration
             services.AddScoped<IProductRepository, ProductRepository>();

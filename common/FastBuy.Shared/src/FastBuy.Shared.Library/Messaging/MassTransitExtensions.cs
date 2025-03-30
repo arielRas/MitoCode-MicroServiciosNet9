@@ -2,12 +2,16 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MassTransit;
+using System.Reflection;
 
 namespace FastBuy.Shared.Library.Messaging
 {
     public static class MassTransitExtensions
     {
-        public static IServiceCollection AddMessageBroker(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddMessageBroker(
+            this IServiceCollection services,
+            IConfiguration configuration,
+            Assembly? consumerAssembly = null)
         {
             //Settings values 
             var serviceSetting = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
@@ -19,6 +23,9 @@ namespace FastBuy.Shared.Library.Messaging
             //MassTransint and RabbitMq registration
             services.AddMassTransit(configure =>
             {
+                if (consumerAssembly is not null)
+                    configure.AddConsumers(Assembly.GetEntryAssembly());
+
                 configure.UsingRabbitMq((context, configurator) =>
                 {
                     configurator.Host(brokerSetting.Host);
