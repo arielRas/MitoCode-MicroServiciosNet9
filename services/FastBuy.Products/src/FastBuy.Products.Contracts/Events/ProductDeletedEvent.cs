@@ -2,9 +2,11 @@
 
 namespace FastBuy.Products.Contracts.Events
 {
-    public record ProductDeletedEvent(Guid id)
+    public record ProductDeletedEvent
     {
+        public ProductDeletedEvent(Guid id) => Id = id;
+
         [Required]
-        public Guid Id { get; } = id;
+        public Guid Id { get; }
     }
 }

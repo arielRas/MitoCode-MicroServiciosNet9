@@ -9,6 +9,17 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: 123456
+  
+  RabbitMq:
+    image: rabbitmq:4.0.7-management
+    container_name: RabbitMQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    hostname: rabbitmq
 
 volumes:
   mongo_data:
+  rabbitmq_data:
