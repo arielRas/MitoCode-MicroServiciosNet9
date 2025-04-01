@@ -24,7 +24,7 @@ namespace FastBuy.Shared.Library.Messaging
             services.AddMassTransit(configure =>
             {
                 if (consumerAssembly is not null)
-                    configure.AddConsumers(Assembly.GetEntryAssembly());
+                    configure.AddConsumers(consumerAssembly);
 
                 configure.UsingRabbitMq((context, configurator) =>
                 {

@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
-namespace FastBuy.Shared.Library.Databases
+namespace FastBuy.Shared.Library.Repository.Extensions
 {
     public static class MongoDbExtensions
     {
@@ -25,7 +25,7 @@ namespace FastBuy.Shared.Library.Databases
             services.AddSingleton<IMongoClient>(serviceProvider =>
                 new MongoClient(mongoSetting.ConnectionString));
 
-            services.AddSingleton<IMongoDatabase>(serviceProvider =>
+            services.AddSingleton(serviceProvider =>
                 serviceProvider.GetRequiredService<IMongoClient>()
                                .GetDatabase(serviceSetting.ServiceName));
 
