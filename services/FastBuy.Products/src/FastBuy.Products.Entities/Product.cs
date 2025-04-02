@@ -1,8 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FastBuy.Shared.Library.Repository.Abstractions;
+using System.ComponentModel.DataAnnotations;
 
 namespace FastBuy.Products.Entities;
 
-public class Product
+public class Product : IBaseEntity
 {
     [Key]
     public Guid Id { get; set; }

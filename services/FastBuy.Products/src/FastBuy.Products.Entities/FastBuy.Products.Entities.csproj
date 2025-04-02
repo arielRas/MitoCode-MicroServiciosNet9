@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="FastBuy.Shared.Library" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>

@@ -1,10 +1,11 @@
-﻿using FastBuy.Products.Entities.Configuration;
+﻿using FastBuy.Products.Entities;
+using FastBuy.Products.Entities.Configuration;
 using FastBuy.Products.Repositories.Abstractions;
 using FastBuy.Products.Repositories.Implementations;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Implementation;
-using FastBuy.Shared.Library.Databases;
 using FastBuy.Shared.Library.Messaging;
+using FastBuy.Shared.Library.Repository.Factories;
 
 namespace FastBuy.Products.Api
 {
@@ -19,12 +20,17 @@ namespace FastBuy.Products.Api
             var brockerSetting = configuration.GetSection(nameof(BrokerSettings)).Get<BrokerSettings>()
                         ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
 
+            var dbServiceProvider = configuration["DatabaseProvider"]
+                ?? throw new ArgumentException($"The DatabaseProvider key has not been configured in the configuration file.");
+
 
             //Settings registration
             services.Configure<ServiceSettings>(configuration.GetSection(nameof(ServiceSettings)));
 
-            //MongoDb service registration
-            services.AddMongoDb(configuration);
+            //MongoDb service and repositories registration
+            var database = DatabaseFactory.CreateDatabase(dbServiceProvider);
+            database.Configure(services, configuration);
+            database.RegisterRepository<Product>(services, serviceSetting.ServiceName);             
 
             //MassTransint and RabbitMq registration
             services.AddMessageBroker(configuration);
