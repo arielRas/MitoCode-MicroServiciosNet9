@@ -1,6 +1,4 @@
-﻿using FastBuy.Products.Api.Mappers;
-using FastBuy.Products.Contracts.DTOs;
-using FastBuy.Products.Contracts.Events;
+﻿using FastBuy.Products.Contracts.DTOs;
 using FastBuy.Products.Services.Abstractions;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +10,10 @@ namespace FastBuy.Products.Api.Controllers
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly IPublishEndpoint _publishEndpoint;
 
         public ProductsController(IProductService productService, IPublishEndpoint publishEndpoint)
         {
             _productService = productService;
-            _publishEndpoint = publishEndpoint;
         }
 
 
@@ -69,8 +65,6 @@ namespace FastBuy.Products.Api.Controllers
 
                 var newProduct = await _productService.CreateAsync(product);
 
-                await _publishEndpoint.Publish(newProduct.ToChangeEvent());
-
                 return CreatedAtAction(nameof(GetById), new { Id = newProduct.Id }, newProduct);
             }
             catch(Exception)
@@ -96,8 +90,6 @@ namespace FastBuy.Products.Api.Controllers
 
                 await _productService.UpdateAsync(id, product);
 
-                await _publishEndpoint.Publish(product.ToChangeEvent(id));
-
                 return NoContent();
             }
             catch (Exception)
@@ -116,8 +108,6 @@ namespace FastBuy.Products.Api.Controllers
                     return BadRequest("The id field cannot be empty");
 
                 await _productService.DeleteAsync(id);
-
-                await _publishEndpoint.Publish(new ProductDeletedEvent(id));
 
                 return NoContent();
             }

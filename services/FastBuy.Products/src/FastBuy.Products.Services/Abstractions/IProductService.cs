@@ -6,8 +6,8 @@ namespace FastBuy.Products.Services.Abstractions
     {
         Task<ProductResponseDto> GetByIdAsync(Guid id);
         Task<IEnumerable<ProductResponseDto>> GetAllAsync();
-        Task<ProductResponseDto> CreateAsync(ProductRequestDto product);
-        Task UpdateAsync(Guid id, ProductRequestDto product);
+        Task<ProductResponseDto> CreateAsync(ProductRequestDto productDto);
+        Task UpdateAsync(Guid id, ProductRequestDto productDto);
         Task DeleteAsync(Guid id);
     }
 }
