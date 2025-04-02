@@ -2,7 +2,7 @@
 using MongoDB.Driver;
 using System.Linq.Expressions;
 
-namespace FastBuy.Shared.Library.Repository.Implementation
+namespace FastBuy.Shared.Library.Repository.Implementation.Repositories
 {
     public class MongoDbRepository<T> : IRepository<T> where T : class, IBaseEntity
     {
