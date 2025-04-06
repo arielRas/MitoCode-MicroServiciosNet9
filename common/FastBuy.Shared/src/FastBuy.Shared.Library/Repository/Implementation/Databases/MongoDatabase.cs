@@ -32,9 +32,9 @@ namespace FastBuy.Shared.Library.Repository.Implementation.Databases
                                .GetDatabase(serviceSetting.ServiceName));
         }
 
-        void IDataBase.RegisterRepository<T>(IServiceCollection services, string? collectionName)
+        public void RegisterRepository<T>(IServiceCollection services, string? collectionName) where T : class, IBaseEntity
         {
-            if(string.IsNullOrWhiteSpace(collectionName))
+            if (string.IsNullOrWhiteSpace(collectionName))
                 throw new ArgumentNullException("The collection name is empty or null.");
 
             services.AddMongoRepository<T>(collectionName);
