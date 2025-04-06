@@ -1,6 +1,8 @@
-﻿namespace FastBuy.Stocks.Entities
+﻿using FastBuy.Shared.Library.Repository.Abstractions;
+
+namespace FastBuy.Stocks.Entities
 {
-    public class StockItem
+    public class StockItem : IBaseEntity
     {
         public Guid Id { get; set; }
         public Guid ProductId { get; set; }

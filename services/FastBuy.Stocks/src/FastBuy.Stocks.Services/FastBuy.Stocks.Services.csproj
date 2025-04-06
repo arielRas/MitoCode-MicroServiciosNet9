@@ -11,4 +11,13 @@
     <ProjectReference Include="..\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Consumers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastBuy.Products.Contracts" Version="1.0.1" />
+    <PackageReference Include="FastBuy.Shared.Library" Version="1.0.3" />
+  </ItemGroup>
+
 </Project>
