@@ -1,10 +1,12 @@
-﻿using FastBuy.Stocks.Entities.Configuration;
+﻿using FastBuy.Shared.Library.Configurations;
+using FastBuy.Shared.Library.Messaging;
+using FastBuy.Shared.Library.Repository.Extensions;
+using FastBuy.Shared.Library.Repository.Factories;
+using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Clients;
+using FastBuy.Stocks.Services.Consumers;
 using FastBuy.Stocks.Services.Implementations;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 
 namespace FastBuy.Stocks.Api.Extensions
 {
@@ -12,25 +14,32 @@ namespace FastBuy.Stocks.Api.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            //Settings values 
+            var serviceSetting = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
+                ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
+
+            var brockerSetting = configuration.GetSection(nameof(BrokerSettings)).Get<BrokerSettings>()
+                        ?? throw new ArgumentException($"The {nameof(BrokerSettings)} key has not been configured in the configuration file.");
+
+            var dbServiceProvider = configuration["DatabaseProvider"]
+                ?? throw new ArgumentException($"The DatabaseProvider key has not been configured in the configuration file.");
+
+
             //Settings registration
             services.Configure<ServiceSettings>(configuration.GetSection(nameof(ServiceSettings)));
 
-            //MongoDb Serializaers           
-            BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
-            BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
             //MonogDb service registration
-            services.AddSingleton<IMongoClient>(serviceProvider =>
-                new MongoClient(configuration.GetConnectionString("DefaultConnection")));
+            var database = DatabaseFactory.CreateDatabase(dbServiceProvider);
 
-            services.AddSingleton(serviceProvider =>
-            {
-                var settings = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
-                    ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
+            database.Configure(services, configuration);
 
-                return serviceProvider.GetRequiredService<IMongoClient>()
-                                      .GetDatabase(settings.ServiceName);
-            });
+            services.AddMongoRepository<StockItem>(serviceSetting.ServiceName)
+                    .AddMongoRepository<ProductItem>("Products");
+
+
+            //MassTransit service registration
+            services.AddMessageBroker(configuration, typeof(ProductItemChangeConsumer).Assembly);
 
             
             //HttpClients registration and Policy application
@@ -41,7 +50,6 @@ namespace FastBuy.Stocks.Api.Extensions
             })
             .AddResiliencePolicies();
             
-
 
             //Service registration
             services.AddScoped<IStockItemService, StockItemService>();           
