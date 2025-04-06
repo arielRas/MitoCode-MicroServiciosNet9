@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace FastBuy.Stocks.Services.Consumers
 {
-    class ProductItemDeleteConsumer : IConsumer<ProductDeletedEvent>
+    public class ProductItemDeleteConsumer : IConsumer<ProductDeletedEvent>
     {
         private readonly IRepository<ProductItem> _repository;
 

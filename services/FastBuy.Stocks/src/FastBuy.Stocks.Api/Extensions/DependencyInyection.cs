@@ -39,7 +39,7 @@ namespace FastBuy.Stocks.Api.Extensions
 
 
             //MassTransit service registration
-            services.AddMessageBroker(configuration, typeof(ProductItemChangeConsumer).Assembly);
+            services.AddMessageBroker(configuration, typeof(ProductItemDeleteConsumer).Assembly);
 
             
             //HttpClients registration and Policy application
