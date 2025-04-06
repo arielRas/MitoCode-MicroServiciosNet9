@@ -14,6 +14,11 @@ namespace FastBuy.Shared.Library.Repository.Implementation.Repositories
             _collection = database.GetCollection<T>(collectionName);
         }
 
+        public async Task<T> GetAsync(Expression<Func<T, bool>> filter)
+        {
+            return await _collection.Find(filter).FirstOrDefaultAsync();
+        }
+
         public async Task<T> GetByIdAsync(Guid id)
         {
             var filter = _filterBuilder.Eq(x => x.Id, id);
@@ -51,6 +56,11 @@ namespace FastBuy.Shared.Library.Repository.Implementation.Repositories
 
             var result = await _collection.FindOneAndDeleteAsync(filter)
                 ?? throw new KeyNotFoundException($"The entity with ID {id} does not exist");
-        }        
+        }
+
+        public async Task<bool> ExistAsync(Expression<Func<T, bool>> filter)
+        {
+            return await _collection.Find(filter).AnyAsync();
+        }
     }
 }

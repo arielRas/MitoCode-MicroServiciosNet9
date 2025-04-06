@@ -7,13 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastBuy.Shared.Library" Version="1.0.5" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
-    <PackageReference Include="Mongodb.Driver" Version="3.2.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj" />
     <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+    <Folder Include="Implementations\" />
   </ItemGroup>
 
 </Project>

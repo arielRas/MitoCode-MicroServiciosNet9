@@ -1,6 +1,4 @@
 ﻿using FastBuy.Stocks.Entities.Configuration;
-using FastBuy.Stocks.Repositories.Abstractions;
-using FastBuy.Stocks.Repositories.Implementations;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Clients;
 using FastBuy.Stocks.Services.Implementations;
@@ -46,7 +44,6 @@ namespace FastBuy.Stocks.Api.Extensions
 
 
             //Service registration
-            services.AddScoped<IStockItemRepository, StockItemRepository>();
             services.AddScoped<IStockItemService, StockItemService>();           
 
 
