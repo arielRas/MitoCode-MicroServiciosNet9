@@ -5,15 +5,15 @@ namespace FastBuy.Stocks.Services.Mappers
 {
     internal static class StockItemMapper
     {
-        public static StockResponseDto ToDto(this StockItem entity, ProductInfoDto product)
+        public static StockResponseDto ToDto(this StockItem stock, ProductItem product)
         {
             return new StockResponseDto
             {
-                ProductId = entity.ProductId,
-                ProductName = product.Name,
-                ProductDescription = product.Description,
-                Quantity = entity.Stock,
-                LastUpdate = entity.LastUpdate
+                ProductId = stock.ProductId,
+                ProductName = product.Name!,
+                ProductDescription = product.Description!,
+                Quantity = stock.Stock,
+                LastUpdate = stock.LastUpdate
             };
         }
     }

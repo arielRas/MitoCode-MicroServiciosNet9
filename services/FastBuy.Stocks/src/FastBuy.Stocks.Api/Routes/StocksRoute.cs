@@ -21,14 +21,12 @@ namespace FastBuy.Stocks.Api.Routes
             return app;
         }
 
-        private static async Task<IResult> GetById([FromRoute] Guid id, IStockItemService service, ProductsClient productClient)
+        private static async Task<IResult> GetById([FromRoute] Guid id, IStockItemService service)
         {
             if(id == Guid.Empty)
                 return Results.BadRequest("The id field cannot be empty or null");
 
-            var productinfo = await productClient.GetProductByIdAsync(id);
-
-            var stockItem = await service.GetByProductIdAsync(id, productinfo);
+            var stockItem = await service.GetByProductIdAsync(id);
 
             return Results.Ok(stockItem);
         }

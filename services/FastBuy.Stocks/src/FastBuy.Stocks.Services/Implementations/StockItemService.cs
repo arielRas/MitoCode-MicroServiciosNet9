@@ -10,23 +10,27 @@ namespace FastBuy.Stocks.Services.Implementations
 {
     public class StockItemService : IStockItemService
     {
-        private readonly IRepository<StockItem> _repository;
+        private readonly IRepository<StockItem> _stockRepository;
+        private readonly IRepository<ProductItem> _productRepository;
         private readonly ILogger<StockItemService> _logger;
 
-        public StockItemService(IRepository<StockItem> repository, ILogger<StockItemService> logger)
+        public StockItemService(IRepository<StockItem> stockRepository, IRepository<ProductItem> productRepository, ILogger<StockItemService> logger)
         {
-            _repository = repository;
+            _stockRepository = stockRepository;
+            _productRepository = productRepository;
             _logger = logger;
         }
 
 
-        public async Task<StockResponseDto> GetByProductIdAsync(Guid productId, ProductInfoDto productInfo)
+        public async Task<StockResponseDto> GetByProductIdAsync(Guid productId)
         {
             Expression<Func<StockItem, bool>> filter = x => x.ProductId == productId;
 
-            var stockItem = await _repository.GetAsync(filter);
+            var stockItem = await _stockRepository.GetAsync(filter);
 
-            return stockItem.ToDto(productInfo);
+            var productItem = await _productRepository.GetByIdAsync(productId);
+
+            return stockItem.ToDto(productItem);
         }
 
 
@@ -34,15 +38,15 @@ namespace FastBuy.Stocks.Services.Implementations
         {
             Expression<Func<StockItem, bool>> filter = x => x.ProductId == productId;
 
-            if (await _repository.ExistAsync(filter))
+            if (await _stockRepository.ExistAsync(filter))
             {
-                var stockItem = await _repository.GetAsync(filter);
+                var stockItem = await _stockRepository.GetAsync(filter);
                 
                 stockItem.Stock = stock;
                 
                 stockItem.LastUpdate = DateTime.UtcNow;
                 
-                await _repository.UpdateAsync(stockItem.Id, stockItem);
+                await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
             }
             else
             {
@@ -54,7 +58,7 @@ namespace FastBuy.Stocks.Services.Implementations
                     LastUpdate = DateTime.UtcNow
                 };
 
-                await _repository.CreateAsync(stockItem);
+                await _stockRepository.CreateAsync(stockItem);
             }
 
             return true;
@@ -65,9 +69,9 @@ namespace FastBuy.Stocks.Services.Implementations
         {
             Expression<Func<StockItem, bool>> filter = x => x.ProductId == stockDecreaseDto.ProductId;
 
-            if (!await _repository.ExistAsync(filter)) return false;
+            if (!await _stockRepository.ExistAsync(filter)) return false;
 
-            var stockItem = await _repository.GetAsync(filter);
+            var stockItem = await _stockRepository.GetAsync(filter);
 
             if(stockItem.Stock < stockDecreaseDto.Quantity) return false;
 
@@ -75,7 +79,7 @@ namespace FastBuy.Stocks.Services.Implementations
 
             stockItem.LastUpdate = DateTimeOffset.UtcNow;
 
-            await _repository.UpdateAsync(stockItem.Id, stockItem);
+            await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
 
             return true;
         }
