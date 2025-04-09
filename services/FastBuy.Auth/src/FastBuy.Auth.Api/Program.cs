@@ -1,4 +1,5 @@
 using FastBuy.Auth.Api.Extensions;
+using FastBuy.Auth.Api.Routes;
 
 namespace FastBuy.Auth.Api
 {
@@ -28,6 +29,8 @@ namespace FastBuy.Auth.Api
             app.UseAuthorization();
 
             app.MapControllers();
+
+            app.MapUsersRoutes();
 
             app.MapRazorPages();
 
