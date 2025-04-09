@@ -24,6 +24,8 @@ namespace FastBuy.Auth.Api
 
             app.UseStaticFiles();
 
+            app.UseIdentityServer();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();

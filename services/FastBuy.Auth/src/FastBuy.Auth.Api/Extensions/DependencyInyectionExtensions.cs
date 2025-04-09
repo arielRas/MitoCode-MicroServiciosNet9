@@ -1,4 +1,5 @@
-﻿using FastBuy.Auth.Api.DataAccess;
+﻿using FastBuy.Auth.Api.Configurations;
+using FastBuy.Auth.Api.DataAccess;
 using FastBuy.Auth.Api.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,9 @@ namespace FastBuy.Auth.Api.Extensions
             var connectionString = configuration.GetConnectionString("DefaultConnection")
                 ?? throw new ArgumentNullException("Connection string is not configured");
 
+            var identityServiceSettings = configuration.GetSection(nameof(IdentityServerSettings)).Get<IdentityServerSettings>()
+                ?? throw new ArgumentNullException("IdentityServerSettings key is not configured");
+
 
             //DbContext Register
             services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
@@ -22,6 +26,22 @@ namespace FastBuy.Auth.Api.Extensions
                     .AddEntityFrameworkStores<AuthDbContext>()
                     .AddDefaultTokenProviders()
                     .AddDefaultUI();
+
+
+            //Identity Server register and configure
+            services.AddIdentityServer(options =>
+            {
+                options.Events.RaiseSuccessEvents = true;
+                options.Events.RaiseFailureEvents = true;
+                options.Events.RaiseErrorEvents = true;
+            })
+            .AddAspNetIdentity<AppUser>()
+            .AddInMemoryApiScopes(identityServiceSettings.ApiScopes)
+            .AddInMemoryClients(identityServiceSettings.Clients)
+            .AddInMemoryIdentityResources(identityServiceSettings.IdentityResources)
+            .AddDeveloperSigningCredential();
+
+
 
             //IdentityEF configuration
             services.Configure<IdentityOptions>(options =>
