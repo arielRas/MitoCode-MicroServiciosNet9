@@ -1,4 +1,5 @@
 ﻿@page
+@using FastBuy.Auth.Api.Entities
 @model RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -12,6 +13,17 @@
             <h2>Create a new account.</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Name" class="form-control" autocomplete="given-name" aria-required="true" placeholder="John" />
+                <label asp-for="Input.Name">Given name</label>
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" placeholder="Connor" />
+                <label asp-for="Input.LastName">Last Name</label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
             <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>

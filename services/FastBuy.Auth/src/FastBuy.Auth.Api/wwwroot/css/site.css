@@ -73,11 +73,11 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.main-container {
+    min-height: 86vh;
+}
+
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  overflow: scroll;
-  white-space: nowrap;
-  line-height: 60px;
+    scrollbar-width: none;
 }
