@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FastBuy.Shared.Library" Version="1.0.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Jwtbearer" Version="9.0.4" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
     <PackageReference Include="swashbuckle.aspnetcore" Version="8.0.0" />
   </ItemGroup>

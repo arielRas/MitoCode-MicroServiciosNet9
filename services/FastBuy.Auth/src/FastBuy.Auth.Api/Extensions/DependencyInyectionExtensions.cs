@@ -37,6 +37,7 @@ namespace FastBuy.Auth.Api.Extensions
             })
             .AddAspNetIdentity<AppUser>()
             .AddInMemoryApiScopes(identityServiceSettings.ApiScopes)
+            .AddInMemoryApiResources(identityServiceSettings.ApiResources)
             .AddInMemoryClients(identityServiceSettings.Clients)
             .AddInMemoryIdentityResources(identityServiceSettings.IdentityResources)
             .AddDeveloperSigningCredential();
