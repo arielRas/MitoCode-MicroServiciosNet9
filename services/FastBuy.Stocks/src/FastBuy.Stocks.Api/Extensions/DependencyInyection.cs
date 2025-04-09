@@ -1,7 +1,7 @@
 ﻿using FastBuy.Shared.Library.Configurations;
 using FastBuy.Shared.Library.Messaging;
-using FastBuy.Shared.Library.Repository.Extensions;
 using FastBuy.Shared.Library.Repository.Factories;
+using FastBuy.Shared.Library.Security;
 using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Clients;
@@ -31,17 +31,15 @@ namespace FastBuy.Stocks.Api.Extensions
 
             //MonogDb service registration
             var database = DatabaseFactory.CreateDatabase(dbServiceProvider);
-
             database.Configure(services, configuration);
-
-            services.AddMongoRepository<StockItem>(serviceSetting.ServiceName)
-                    .AddMongoRepository<ProductItem>("Products");
+            database.RegisterRepository<StockItem>(services, serviceSetting.ServiceName);
+            database.RegisterRepository<ProductItem>(services, "Products");
 
 
             //MassTransit service registration
             services.AddMessageBroker(configuration, typeof(ProductItemDeleteConsumer).Assembly);
-
             
+
             //HttpClients registration and Policy application
             services.AddHttpClient<ProductsClient>(client =>
             {
@@ -49,11 +47,14 @@ namespace FastBuy.Stocks.Api.Extensions
                     ?? throw new ArgumentException($"The ProductsUrl key has not been configured in the configuration file."));
             })
             .AddResiliencePolicies();
-            
+
+
+            //Jwt configure and register
+            services.AddJwtBearerAuthentication();            
+
 
             //Service registration
-            services.AddScoped<IStockItemService, StockItemService>();           
-
+            services.AddScoped<IStockItemService, StockItemService>();
 
             return services;
         }

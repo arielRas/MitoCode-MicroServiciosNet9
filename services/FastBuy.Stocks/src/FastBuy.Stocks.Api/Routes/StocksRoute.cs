@@ -10,7 +10,9 @@ namespace FastBuy.Stocks.Api.Routes
         public static IApplicationBuilder MapStocksRoute(this WebApplication app)
         {
 
-            var group = app.MapGroup("/api/stocks").WithTags("Stocks");
+            var group = app.MapGroup("/api/stocks")
+                           .RequireAuthorization()
+                           .WithTags("Stocks");
 
             group.MapGet("/{id:Guid}", GetById);
 
