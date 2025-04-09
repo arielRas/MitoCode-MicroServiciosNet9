@@ -1,12 +1,14 @@
 ﻿using FastBuy.Products.Contracts.DTOs;
 using FastBuy.Products.Services.Abstractions;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBuy.Products.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
-    [ApiController]
+    [ApiController]    
     public class ProductsController : ControllerBase
     {
         private readonly IProductService _productService;

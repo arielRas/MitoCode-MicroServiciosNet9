@@ -6,6 +6,7 @@ using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Implementation;
 using FastBuy.Shared.Library.Messaging;
 using FastBuy.Shared.Library.Repository.Factories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FastBuy.Products.Api
 {
@@ -34,6 +35,14 @@ namespace FastBuy.Products.Api
 
             //MassTransint and RabbitMq registration
             services.AddMessageBroker(configuration);
+
+            //Authorization registration
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.Authority = configuration["Urls:AuthUrl"];
+                        options.Audience = serviceSetting.ServiceName;
+                    });
 
             //Service registration
             services.AddScoped<IProductRepository, ProductRepository>();
