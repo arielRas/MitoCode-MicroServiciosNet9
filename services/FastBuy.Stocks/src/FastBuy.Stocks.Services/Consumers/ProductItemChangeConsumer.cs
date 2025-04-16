@@ -8,11 +8,14 @@ namespace FastBuy.Stocks.Services.Consumers
 {
     public class ProductItemChangeConsumer : IConsumer<ProductChangeEvent>
     {
-        private readonly IRepository<ProductItem> _repository;
+        private readonly IRepository<ProductItem> _productItemRepository;
 
-        public ProductItemChangeConsumer(IRepository<ProductItem> repository)
+        private readonly IRepository<StockItem> _stockItemRepository;
+
+        public ProductItemChangeConsumer(IRepository<ProductItem> productItemRepository, IRepository<StockItem> stockItemRepository)
         {
-            _repository = repository;
+            _productItemRepository = productItemRepository;
+            _stockItemRepository = stockItemRepository;
         }
 
         public async Task Consume(ConsumeContext<ProductChangeEvent> context)
@@ -28,13 +31,22 @@ namespace FastBuy.Stocks.Services.Consumers
                 Description = message.Description,
             };
 
-            if (await _repository.ExistAsync(filter))
+            if (await _productItemRepository.ExistAsync(filter))
             {
-                await _repository.UpdateAsync(ProductItem.Id, ProductItem);
+                await _productItemRepository.UpdateAsync(ProductItem.Id, ProductItem);
             }
             else
             {
-                await _repository.CreateAsync(ProductItem);
+                var stockItem = new StockItem
+                {
+                    ProductId = message.Id,
+                    Stock = 0,
+                    LastUpdate = DateTime.UtcNow
+                };
+
+                await _productItemRepository.CreateAsync(ProductItem);
+
+                await _stockItemRepository.CreateAsync(stockItem);
             }
         }        
     }

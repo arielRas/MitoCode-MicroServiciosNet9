@@ -1,6 +1,5 @@
 ﻿using FastBuy.Stocks.Contracts;
 using FastBuy.Stocks.Services.Abstractions;
-using FastBuy.Stocks.Services.Clients;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FastBuy.Stocks.Api.Routes
@@ -16,9 +15,9 @@ namespace FastBuy.Stocks.Api.Routes
 
             group.MapGet("/{id:Guid}", GetById);
 
-            group.MapPost("/{id:Guid}", SetStock);
+            group.MapPatch("/{id:Guid}", SetStock);
 
-            group.MapPatch("", DecreaseStock);
+            group.MapPatch("",  DecreaseStock);
 
             return app;
         }
@@ -43,7 +42,7 @@ namespace FastBuy.Stocks.Api.Routes
 
             var result = await service.SetStockAsync(id, stock);
 
-            return result ? Results.Ok() : Results.BadRequest();
+            return result ? Results.NoContent() : Results.BadRequest();
         }
 
 
@@ -60,7 +59,8 @@ namespace FastBuy.Stocks.Api.Routes
 
             var result = await service.DecreaseStockAsync(stockDecreaseDto);
 
-            return result ? Results.NoContent() : Results.BadRequest();
+            return result ? Results.NoContent() 
+                          : Results.BadRequest("the stock you are trying to subtract is greater than the existing one");
         }
     }
 }

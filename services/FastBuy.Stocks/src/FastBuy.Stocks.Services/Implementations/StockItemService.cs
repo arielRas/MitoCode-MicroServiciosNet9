@@ -38,28 +38,13 @@ namespace FastBuy.Stocks.Services.Implementations
         {
             Expression<Func<StockItem, bool>> filter = x => x.ProductId == productId;
 
-            if (await _stockRepository.ExistAsync(filter))
-            {
-                var stockItem = await _stockRepository.GetAsync(filter);
-                
-                stockItem.Stock = stock;
-                
-                stockItem.LastUpdate = DateTime.UtcNow;
-                
-                await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
-            }
-            else
-            {
-                var stockItem = new StockItem
-                {
-                    Id = Guid.NewGuid(),
-                    ProductId = productId,
-                    Stock = stock,
-                    LastUpdate = DateTime.UtcNow
-                };
+            var stockItem = await _stockRepository.GetAsync(filter);
 
-                await _stockRepository.CreateAsync(stockItem);
-            }
+            stockItem.Stock = stock;
+
+            stockItem.LastUpdate = DateTime.UtcNow;
+
+            await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
 
             return true;
         }
@@ -69,11 +54,12 @@ namespace FastBuy.Stocks.Services.Implementations
         {
             Expression<Func<StockItem, bool>> filter = x => x.ProductId == stockDecreaseDto.ProductId;
 
-            if (!await _stockRepository.ExistAsync(filter)) return false;
+            if (!await _stockRepository.ExistAsync(filter))
+                throw new KeyNotFoundException($"The resource with id {stockDecreaseDto.ProductId} does not exist");
 
             var stockItem = await _stockRepository.GetAsync(filter);
 
-            if(stockItem.Stock < stockDecreaseDto.Quantity) return false;
+            if (stockItem.Stock < stockDecreaseDto.Quantity) return false;
 
             stockItem.Stock -= stockDecreaseDto.Quantity;
 
