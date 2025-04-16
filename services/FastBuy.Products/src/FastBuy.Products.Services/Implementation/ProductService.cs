@@ -1,18 +1,19 @@
 ﻿using FastBuy.Products.Contracts.DTOs;
 using FastBuy.Products.Contracts.Events;
-using FastBuy.Products.Repositories.Abstractions;
+using FastBuy.Products.Entities;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Mappers;
+using FastBuy.Shared.Library.Repository.Abstractions;
 using MassTransit;
 
 namespace FastBuy.Products.Services.Implementation
 {
     public class ProductService : IProductService
     {
-        private readonly IProductRepository _repository;
+        private readonly IRepository<Product> _repository;
         private readonly IPublishEndpoint _publisher;
 
-        public ProductService(IProductRepository repository, IPublishEndpoint publisher)
+        public ProductService(IRepository<Product> repository, IPublishEndpoint publisher)
         {
             _repository = repository;
             _publisher = publisher;
@@ -33,7 +34,9 @@ namespace FastBuy.Products.Services.Implementation
 
         public async Task<ProductResponseDto> CreateAsync(ProductRequestDto productDto)
         {
-            var newProduct = await _repository.CreateAsync(productDto.ToEntity());
+            var newProduct = productDto.ToEntity();
+
+            await _repository.CreateAsync(newProduct);
 
             await _publisher.Publish(newProduct.ToChangeEvent());
 

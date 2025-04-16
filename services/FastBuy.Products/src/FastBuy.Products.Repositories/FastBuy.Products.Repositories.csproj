@@ -15,4 +15,8 @@
     <ProjectReference Include="..\FastBuy.Products.Entities\FastBuy.Products.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+  </ItemGroup>
+
 </Project>

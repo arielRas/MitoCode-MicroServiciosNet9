@@ -40,8 +40,7 @@ namespace FastBuy.Products.Api
             //Authorization registration
             services.AddJwtBearerAuthentication();
 
-            //Service registration
-            services.AddScoped<IProductRepository, ProductRepository>();
+            //Service registration            
             services.AddScoped<IProductService, ProductService>();
 
             return services;
