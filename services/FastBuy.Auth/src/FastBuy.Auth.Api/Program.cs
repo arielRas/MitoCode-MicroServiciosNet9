@@ -1,4 +1,5 @@
 using FastBuy.Auth.Api.Extensions;
+using FastBuy.Auth.Api.Middlewares;
 using FastBuy.Auth.Api.Routes;
 
 namespace FastBuy.Auth.Api
@@ -27,6 +28,8 @@ namespace FastBuy.Auth.Api
             app.UseIdentityServer();
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             app.UseAuthorization();
 
