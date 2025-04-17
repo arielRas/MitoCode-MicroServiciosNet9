@@ -10,7 +10,7 @@ namespace FastBuy.Stocks.Api.Routes
         {
 
             var group = app.MapGroup("/api/stocks")
-                           .RequireAuthorization()
+                           .RequireAuthorization(policy => policy.RequireRole("Admin"))
                            .WithTags("Stocks");
 
             group.MapGet("/{id:Guid}", GetById);
