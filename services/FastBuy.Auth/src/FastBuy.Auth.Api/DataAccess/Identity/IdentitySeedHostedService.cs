@@ -49,7 +49,7 @@ namespace FastBuy.Auth.Api.DataAccess.Identity
 
         private async Task EnsureRolesExistsAsync(RoleManager<AppRole> roleManager)
         {
-            var existingRoles = new [] { Role.Admin.ToString(), Role.Customer.ToString() };
+            var existingRoles = new [] { Role.Admin, Role.Customer };
 
             foreach(var role in existingRoles)
             {
@@ -86,7 +86,7 @@ namespace FastBuy.Auth.Api.DataAccess.Identity
 
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(adminUser, Role.Admin.ToString()).ConfigureAwait(false);
+                    await userManager.AddToRoleAsync(adminUser, Role.Admin).ConfigureAwait(false);
 
                     _logger.LogInformation($"Admin user '{adminEmail}' created successfully.");
                 }

@@ -1,8 +1,8 @@
 ﻿namespace FastBuy.Auth.Api.Configurations
 {
-    public enum Role
+    public static class Role
     {
-        Admin,
-        Customer
+        public const string Admin = "Admin";
+        public const string Customer = "Customer";        
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Duende.IdentityServer;
+using FastBuy.Auth.Api.Configurations;
 using FastBuy.Auth.Api.Contracts;
 using FastBuy.Auth.Api.Entities;
 using FastBuy.Auth.Api.Mappers;
@@ -10,7 +11,7 @@ namespace FastBuy.Auth.Api.Controllers
 {    
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(Policy = IdentityServerConstants.LocalApi.PolicyName)]
+    [Authorize(Policy = IdentityServerConstants.LocalApi.PolicyName, Roles = Role.Admin)]
     public class UsersController : Controller
     {
         private readonly UserManager<AppUser> _userManager;
