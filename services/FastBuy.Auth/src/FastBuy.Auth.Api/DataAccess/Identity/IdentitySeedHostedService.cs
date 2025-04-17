@@ -70,11 +70,11 @@ namespace FastBuy.Auth.Api.DataAccess.Identity
 
             if (adminUser == null)
             {
-                _logger.LogInformation("Creating admin user '{AdminEmail}'...", adminEmail);
+                _logger.LogInformation($"Creating admin user '{adminEmail}'...");
 
                 adminUser = new AppUser
                 {
-                    UserName = _options.Value.AdminUserName,
+                    UserName = adminEmail,
                     Email = adminEmail,
                     Name = _options.Value.Name,
                     LastName = _options.Value.LastName

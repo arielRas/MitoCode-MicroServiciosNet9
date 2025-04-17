@@ -1,13 +1,10 @@
 ﻿using FastBuy.Products.Entities;
 using FastBuy.Products.Entities.Configuration;
-using FastBuy.Products.Repositories.Abstractions;
-using FastBuy.Products.Repositories.Implementations;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Implementation;
 using FastBuy.Shared.Library.Messaging;
 using FastBuy.Shared.Library.Repository.Factories;
 using FastBuy.Shared.Library.Security;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace FastBuy.Products.Api
 {

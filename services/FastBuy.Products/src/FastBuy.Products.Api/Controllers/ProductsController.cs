@@ -3,10 +3,12 @@ using FastBuy.Products.Services.Abstractions;
 using MassTransit;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 
 namespace FastBuy.Products.Api.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]    
     public class ProductsController : ControllerBase
@@ -24,6 +26,7 @@ namespace FastBuy.Products.Api.Controllers
         {
             try
             {
+                var currenUserId = User.FindFirstValue(JwtRegisteredClaimNames.Sub);
                 if (id == Guid.Empty)
                     return BadRequest("The id field cannot be empty");
 
