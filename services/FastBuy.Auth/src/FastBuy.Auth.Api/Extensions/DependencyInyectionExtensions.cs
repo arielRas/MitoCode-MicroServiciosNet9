@@ -18,8 +18,13 @@ namespace FastBuy.Auth.Api.Extensions
                 ?? throw new ArgumentNullException("IdentityServerSettings key is not configured");
 
 
+            //Configuration option pattern classes
+            services.Configure<AuthSettings>(configuration.GetSection(nameof(AuthSettings)));
+
+
             //DbContext Register
             services.AddDbContext<AuthDbContext>(options => options.UseSqlServer(connectionString));
+
 
             //IdentityEF register
             services.AddIdentity<AppUser, AppRole>()
@@ -42,6 +47,9 @@ namespace FastBuy.Auth.Api.Extensions
             .AddInMemoryIdentityResources(identityServiceSettings.IdentityResources)
             .AddDeveloperSigningCredential();
 
+
+            //Authentication for this api
+            services.AddLocalApiAuthentication();
 
 
             //IdentityEF configuration

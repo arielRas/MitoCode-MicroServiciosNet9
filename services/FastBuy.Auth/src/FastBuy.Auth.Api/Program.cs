@@ -1,6 +1,6 @@
+using FastBuy.Auth.Api.DataAccess.Identity;
 using FastBuy.Auth.Api.Extensions;
 using FastBuy.Auth.Api.Middlewares;
-using FastBuy.Auth.Api.Routes;
 
 namespace FastBuy.Auth.Api
 {
@@ -11,6 +11,7 @@ namespace FastBuy.Auth.Api
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddApplicationServices(builder.Configuration)
+                            .AddHostedService<IdentitySeedHostedService>()
                             .AddPresentation()
                             .AddRazorPages();
 
@@ -31,11 +32,11 @@ namespace FastBuy.Auth.Api
 
             app.UseMiddleware<GlobalExceptionMiddleware>();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllers();
-
-            app.MapUsersRoutes();
 
             app.MapRazorPages();
 
