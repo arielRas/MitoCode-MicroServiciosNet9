@@ -24,6 +24,7 @@ namespace FastBuy.Products.Services.Mappers
             {
                 Id = entity.Id,
                 Name = entity.Name,
+                Price = entity.Price,
                 Description = entity.Description
             };
         }
