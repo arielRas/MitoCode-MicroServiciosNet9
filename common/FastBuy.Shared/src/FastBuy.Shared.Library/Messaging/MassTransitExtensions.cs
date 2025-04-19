@@ -11,7 +11,9 @@ namespace FastBuy.Shared.Library.Messaging
         public static IServiceCollection AddMessageBroker(
             this IServiceCollection services,
             IConfiguration configuration,
-            Assembly? consumerAssembly = null)
+            Assembly? consumerAssembly = null,
+            Action<IRetryConfigurator>? retryConfigurator = null
+            )
         {
             //Settings values 
             var serviceSetting = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
@@ -19,6 +21,9 @@ namespace FastBuy.Shared.Library.Messaging
 
             var brokerSetting = configuration.GetSection(nameof(BrokerSettings)).Get<BrokerSettings>()
                         ?? throw new ArgumentException($"The {nameof(BrokerSettings)} key has not been configured in the configuration file.");
+
+            if (retryConfigurator is null)
+                retryConfigurator = configurator => configurator.Interval(3, TimeSpan.FromSeconds(4));
 
             //MassTransint and RabbitMq registration
             services.AddMassTransit(configure =>
@@ -38,6 +43,7 @@ namespace FastBuy.Shared.Library.Messaging
                         )
                     );
 
+                    configurator.UseMessageRetry(retryConfigurator);
                 });
             });
 
