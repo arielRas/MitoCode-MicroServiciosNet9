@@ -6,7 +6,9 @@ using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Clients;
 using FastBuy.Stocks.Services.Consumers;
+using FastBuy.Stocks.Services.Exceptions;
 using FastBuy.Stocks.Services.Implementations;
+using MassTransit;
 
 namespace FastBuy.Stocks.Api.Extensions
 {
@@ -37,7 +39,14 @@ namespace FastBuy.Stocks.Api.Extensions
 
 
             //MassTransit service registration
-            services.AddMessageBroker(configuration, typeof(ProductItemDeleteConsumer).Assembly);
+            services.AddMessageBroker(
+                configuration,
+                typeof(ProductItemDeleteConsumer).Assembly,
+                retryConfigurator =>
+                {
+                    retryConfigurator.Interval(3, TimeSpan.FromSeconds(4));
+                    retryConfigurator.Ignore(typeof(NonExistentProductException));
+                });
             
 
             //HttpClients registration and Policy application
