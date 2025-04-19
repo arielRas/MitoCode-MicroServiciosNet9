@@ -1,4 +1,4 @@
-﻿using FastBuy.Stocks.Contracts;
+﻿using FastBuy.Stocks.Contracts.DTOs;
 
 namespace FastBuy.Stocks.Services.Abstractions
 {

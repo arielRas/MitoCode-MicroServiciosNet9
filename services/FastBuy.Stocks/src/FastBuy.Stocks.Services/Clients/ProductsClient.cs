@@ -1,4 +1,4 @@
-﻿using FastBuy.Stocks.Contracts;
+﻿using FastBuy.Stocks.Contracts.DTOs;
 using FastBuy.Stocks.Entities.Exceptions;
 using System.Net;
 using System.Net.Http.Json;

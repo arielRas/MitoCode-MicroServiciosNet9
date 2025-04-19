@@ -1,4 +1,4 @@
-﻿namespace FastBuy.Stocks.Contracts
+﻿namespace FastBuy.Stocks.Contracts.DTOs
 {
     public record ProductInfoDto
     {

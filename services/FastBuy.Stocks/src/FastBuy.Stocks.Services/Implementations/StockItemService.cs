@@ -1,5 +1,5 @@
 ﻿using FastBuy.Shared.Library.Repository.Abstractions;
-using FastBuy.Stocks.Contracts;
+using FastBuy.Stocks.Contracts.DTOs;
 using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Mappers;

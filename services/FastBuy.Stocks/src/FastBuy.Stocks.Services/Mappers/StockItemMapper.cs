@@ -1,4 +1,4 @@
-﻿using FastBuy.Stocks.Contracts;
+﻿using FastBuy.Stocks.Contracts.DTOs;
 using FastBuy.Stocks.Entities;
 
 namespace FastBuy.Stocks.Services.Mappers
