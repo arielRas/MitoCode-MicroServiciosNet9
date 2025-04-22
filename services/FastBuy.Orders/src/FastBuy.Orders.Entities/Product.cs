@@ -17,5 +17,7 @@ namespace FastBuy.Orders.Entities
         [Required]
         [Range(0.01, Double.MaxValue)]
         public decimal Price { get; set; }
+
+        public ICollection<OrderItem>? OrderItems { get; set; }
     }
 }
