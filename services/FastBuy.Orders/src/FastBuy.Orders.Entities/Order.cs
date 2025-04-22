@@ -1,6 +1,6 @@
 ﻿namespace FastBuy.Orders.Entities
 {
-    public class Order
+    public class Order : IBaseEntity
     {
         public Guid Id { get; set; }
 

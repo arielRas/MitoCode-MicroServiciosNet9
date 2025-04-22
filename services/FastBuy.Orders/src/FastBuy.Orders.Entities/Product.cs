@@ -2,7 +2,7 @@
 
 namespace FastBuy.Orders.Entities
 {
-    public class Product
+    public class Product : IBaseEntity
     {
         [Key]
         [Required]
