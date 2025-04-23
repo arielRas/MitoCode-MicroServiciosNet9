@@ -17,7 +17,7 @@ namespace FastBuy.Orders.Repository.Database
         public DbSet<OrderState> OrderState { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer("Name=SqlServerSettings:ConnectionString");
+            => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
