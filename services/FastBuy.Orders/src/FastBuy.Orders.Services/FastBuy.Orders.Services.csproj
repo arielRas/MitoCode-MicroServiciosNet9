@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Orders.Contracts\FastBuy.Orders.Contracts.csproj" />
     <ProjectReference Include="..\FastBuy.Orders.Repository\FastBuy.Orders.Repository.csproj" />
   </ItemGroup>
 

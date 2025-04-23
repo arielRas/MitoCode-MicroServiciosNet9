@@ -1,6 +1,7 @@
 ﻿using FastBuy.Orders.Repository.Database;
 using FastBuy.Shared.Library.Configurations;
 using FastBuy.Shared.Library.Repository.Factories;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Api.Extensions
 {
@@ -8,17 +9,19 @@ namespace FastBuy.Orders.Api.Extensions
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-            //Settings values 
-            var dbServiceProvider = configuration["DatabaseProvider"]
-                ?? throw new ArgumentException($"The DatabaseProvider key has not been configured in the configuration file.");
-
+            //Settings values
             var serviceSetting = configuration.GetSection(nameof(ServiceSettings)).Get<ServiceSettings>()
                 ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
 
-
             //Database registration
-            var dataBase = DatabaseFactory.CreateDatabase<OrdersDbContext>(dbServiceProvider);
-            dataBase.Configure(services, configuration);
+            services.AddDbContext<OrdersDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
+
+
+            //Broker Message registration
+            services.AddMessageBroker(configuration);
 
 
             return services;

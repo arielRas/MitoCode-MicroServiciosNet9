@@ -1,4 +1,5 @@
 ﻿using FastBuy.Orders.Entities;
+using FastBuy.Orders.Repository.Saga;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Repository.Database
@@ -13,6 +14,7 @@ namespace FastBuy.Orders.Repository.Database
         public DbSet<Order> Order { get; set; }
         public DbSet<Product> Product { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
+        public DbSet<OrderState> OrderState { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.UseSqlServer("Name=SqlServerSettings:ConnectionString");
@@ -33,6 +35,13 @@ namespace FastBuy.Orders.Repository.Database
                 .HasOne(oi => oi.Product)
                 .WithMany(p => p.OrderItems)
                 .HasForeignKey(oi => oi.ProductId);
+
+            modelBuilder.Entity<OrderState>(entity =>
+            {
+                entity.HasKey(e => e.CorrelationId);
+                entity.Property(e => e.CurrentState);
+                entity.Property(e => e.CreatedAt);
+            });
         }
     }
 }
