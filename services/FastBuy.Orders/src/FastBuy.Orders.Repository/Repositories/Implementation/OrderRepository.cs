@@ -4,11 +4,11 @@ using FastBuy.Orders.Repository.Repositories.Abstractions;
 
 namespace FastBuy.Orders.Repository.Repositories.Implementation
 {
-    public class ProductRepository : Repository<Product>, IProductRepository
+    public class OrderRepository : Repository<Order>, IOrderRepository
     {
-        public ProductRepository(OrdersDbContext context) : base(context)
+        public OrderRepository(OrdersDbContext context) : base(context)
         {
-            
+
         }
     }
 }

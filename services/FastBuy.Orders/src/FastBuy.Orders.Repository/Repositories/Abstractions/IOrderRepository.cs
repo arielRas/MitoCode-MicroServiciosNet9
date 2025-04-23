@@ -2,8 +2,8 @@
 
 namespace FastBuy.Orders.Repository.Repositories.Abstractions
 {
-    public interface IProductRepository : IRepository<Product>
+    public interface IOrderRepository : IRepository<Order>
     {
-        
+     
     }
 }

@@ -48,6 +48,16 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateAsync(Guid id, T entity)
+        {
+            var existingEntity = await dbSet.FindAsync(id)
+                ?? throw new KeyNotFoundException($"The resource with id {id} does not exist");
+
+            _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task DeleteAsync(Guid id)
         {
             var existingEntity = await dbSet.FindAsync(id)
@@ -56,6 +66,6 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
             _context.Remove(existingEntity);
 
             await _context.SaveChangesAsync();
-        }
+        }        
     }
 }

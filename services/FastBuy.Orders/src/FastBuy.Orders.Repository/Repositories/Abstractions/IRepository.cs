@@ -9,6 +9,7 @@ namespace FastBuy.Orders.Repository.Repositories.Abstractions
         Task<T?> GetByIdAsync(Guid id);
         Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null);
         Task CreateAsync(T entity);
+        Task UpdateAsync(Guid id, T entity);
         Task DeleteAsync(Guid id);
     }
 }
