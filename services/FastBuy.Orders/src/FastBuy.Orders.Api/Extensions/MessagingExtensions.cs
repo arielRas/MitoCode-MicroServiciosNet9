@@ -2,6 +2,7 @@
 using FastBuy.Orders.Entities.Settings;
 using FastBuy.Orders.Repository.Database;
 using FastBuy.Orders.Repository.Saga;
+using FastBuy.Orders.Services.Consumers;
 using FastBuy.Orders.Services.StateMachines;
 using FastBuy.Products.Contracts.Events;
 using MassTransit;
@@ -20,9 +21,9 @@ namespace FastBuy.Orders.Api.Extensions
 
             services.AddMassTransit(configure =>
             {                
-                configure.AddConsumers(typeof(ProductChangeEvent).Assembly);
+                configure.AddConsumers(typeof(ProductChangeConsumer).Assembly);
 
-                configure.AddConsumers(typeof(OrderCreatedEvent).Assembly);
+                //configure.AddConsumers(typeof().Assembly);
 
                 configure.UsingRabbitMq((context, configurator) =>
                 {

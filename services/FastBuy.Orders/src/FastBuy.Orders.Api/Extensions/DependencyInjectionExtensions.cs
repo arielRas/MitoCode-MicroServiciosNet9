@@ -1,6 +1,7 @@
 ﻿using FastBuy.Orders.Repository.Database;
+using FastBuy.Orders.Repository.Repositories.Abstractions;
+using FastBuy.Orders.Repository.Repositories.Implementation;
 using FastBuy.Shared.Library.Configurations;
-using FastBuy.Shared.Library.Repository.Factories;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Api.Extensions
@@ -22,6 +23,10 @@ namespace FastBuy.Orders.Api.Extensions
 
             //Broker Message registration
             services.AddMessageBroker(configuration);
+
+
+            //Repositories registration
+            services.AddScoped<IProductRepository, ProductRepository>();
 
 
             return services;

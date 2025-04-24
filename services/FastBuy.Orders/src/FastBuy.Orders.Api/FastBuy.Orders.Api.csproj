@@ -18,10 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FastBuy.Orders.Repository\FastBuy.Orders.Repository.csproj" />
     <ProjectReference Include="..\FastBuy.Orders.Services\FastBuy.Orders.Services.csproj" />
   </ItemGroup>

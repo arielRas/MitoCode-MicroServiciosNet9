@@ -30,7 +30,7 @@ namespace FastBuy.Orders.Services.Consumers
             }
             else
             {
-                await _repository.UpdateAsync(message.ToEntity());
+                await _repository.UpdateAsync(message.Id,message.ToEntity());
             }            
         }
     }
