@@ -7,11 +7,10 @@ using MassTransit;
 
 namespace FastBuy.Orders.Services.Implementations
 {
-    class OrderService : IOrderService
+    public class OrderService : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IPublishEndpoint _publisher;
-
         public OrderService(IOrderRepository orderRepository, IPublishEndpoint publisher)
         {
             _orderRepository = orderRepository;
@@ -19,21 +18,29 @@ namespace FastBuy.Orders.Services.Implementations
         }
 
         public async Task CreateAsync(OrderRequestDto orderDto)
-        {
+        {            
             var newId = Guid.NewGuid();
 
             var newOrder = orderDto.ToEntity(newId);
 
             await _orderRepository.CreateAsync(newOrder);
 
-            var orderCreateEvent = new OrderCreatedEvent 
+            var orderCreateEvent = new OrderCreatedEvent
             {
-                CorrelationId = newId,
+                CorrelationId = newOrder.Id,
                 OrderItems = orderDto.OrderItems,
                 CreatedAt = DateTime.UtcNow,
             };
 
+            var stockDecreaseEvent = new StockDecreaseEvent
+            {
+                CorrelationId = newOrder.Id,
+                Items = orderDto.OrderItems
+            };
+
             await _publisher.Publish(orderCreateEvent);
+
+            await _publisher.Publish(stockDecreaseEvent);
         }
     }
 }

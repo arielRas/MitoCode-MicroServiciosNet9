@@ -15,9 +15,9 @@ namespace FastBuy.Orders.Api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(OrderRequestDto orderRequestDto)
+        public async Task<IActionResult> Create(OrderRequestDto orderRequestDto)
         {
-            _orderService.CreateAsync(orderRequestDto);
+            await _orderService.CreateAsync(orderRequestDto);
 
             return Accepted();
         }

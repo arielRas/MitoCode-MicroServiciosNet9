@@ -7,7 +7,7 @@ namespace FastBuy.Orders.Services.Mappers
     {
         public static Order ToEntity(this OrderRequestDto dto, Guid orderId)
         {
-            return new Order
+            var order =  new Order
             {
                 Id = orderId,
                 Items = dto.OrderItems.Select(oi => oi.ToEntity(orderId)).ToList(),
@@ -15,6 +15,13 @@ namespace FastBuy.Orders.Services.Mappers
                 LastUpdate = DateTimeOffset.UtcNow,
                 State = "Acepted"
             };
+
+            foreach (var item in order.Items)
+            {
+                item.Order = order;
+            }
+
+            return order;
         }
 
 

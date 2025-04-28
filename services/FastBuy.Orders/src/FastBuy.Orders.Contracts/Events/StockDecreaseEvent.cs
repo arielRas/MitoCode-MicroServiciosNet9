@@ -1,9 +1,10 @@
-﻿namespace FastBuy.Orders.Contracts.Events
+﻿using FastBuy.Orders.Contracts.DTOs;
+
+namespace FastBuy.Orders.Contracts.Events
 {
     public class StockDecreaseEvent
-    {
-        public Guid ProductId { get; set; }
-        public int Quantity { get; set; }
+    {        
         public Guid CorrelationId { get; set; }
+        public required IEnumerable<OrderItemRequestDto> Items { get; set; }
     }
 }

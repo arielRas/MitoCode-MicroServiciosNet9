@@ -32,9 +32,20 @@ namespace FastBuy.Orders.Services.StateMachines
 
         private void ConfigureEvents()
         {
-            Event(() => OrderCreated, x => x.CorrelateById(context => context.Message.CorrelationId));            
-            Event(() => StockFailedDecrease, x => x.CorrelateById(context => context.Message.CorrelationId));
-            Event(() => StockDecreased, x => x.CorrelateById(context => context.Message.CorrelationId));
+            Event(() => OrderCreated, x =>
+            {
+                x.CorrelateById(context => context.Message.CorrelationId);
+            }); 
+            
+            Event(() => StockFailedDecrease, x =>
+            {
+                x.CorrelateById(context => context.Message.CorrelationId);
+            });
+
+            Event(() => StockDecreased, x =>
+            {
+                x.CorrelateById(context => context.Message.CorrelationId);
+            });
         }
 
         private void ConfigureInitialState()
@@ -44,6 +55,7 @@ namespace FastBuy.Orders.Services.StateMachines
                 {
                     context.Saga.CreatedAt = DateTime.UtcNow;
                     context.Saga.LastUpdate = DateTime.UtcNow;
+                    context.Saga.CurrentState = nameof(OrderCreated);
                     _logger.LogInformation($"[SAGA] Order create - CorrelationId {context.Saga.CorrelationId}");
                 })
                 .TransitionTo(AwaitingStocksDecrease)
