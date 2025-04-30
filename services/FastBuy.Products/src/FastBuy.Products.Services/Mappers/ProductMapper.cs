@@ -1,6 +1,6 @@
 ﻿using FastBuy.Products.Contracts.DTOs;
-using FastBuy.Products.Contracts.Events;
 using FastBuy.Products.Entities;
+using FastBuy.Shared.Events.Events.Products;
 
 namespace FastBuy.Products.Services.Mappers
 {

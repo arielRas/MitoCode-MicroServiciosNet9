@@ -1,6 +1,6 @@
 ﻿namespace FastBuy.Shared.Events.Exceptions
 {
-    class NonExistentProductException : AsynchronousMessagingException
+    public class NonExistentProductException : AsynchronousMessagingException
     {
         public Guid ProductId { get; }
 

@@ -7,18 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastBuy.Shared.Library" Version="1.0.5" />
+    <Compile Remove="Abstractions\**" />
+    <Compile Remove="Implementations\**" />
+    <EmbeddedResource Remove="Abstractions\**" />
+    <EmbeddedResource Remove="Implementations\**" />
+    <None Remove="Abstractions\**" />
+    <None Remove="Implementations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj" />
     <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Abstractions\" />
-    <Folder Include="Implementations\" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using FastBuy.Shared.Library.Configurations;
+﻿using FastBuy.Shared.Events.Exceptions;
+using FastBuy.Shared.Library.Configurations;
 using FastBuy.Shared.Library.Messaging;
 using FastBuy.Shared.Library.Repository.Factories;
 using FastBuy.Shared.Library.Security;
@@ -45,7 +46,7 @@ namespace FastBuy.Stocks.Api.Extensions
                 retryConfigurator =>
                 {
                     retryConfigurator.Interval(3, TimeSpan.FromSeconds(4));
-                    retryConfigurator.Ignore(typeof(NonExistentProductException));
+                    retryConfigurator.Ignore(typeof(AsynchronousMessagingException));
                 });
             
 

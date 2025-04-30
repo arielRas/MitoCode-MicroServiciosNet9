@@ -11,7 +11,7 @@ namespace FastBuy.Shared.Library.Messaging
         public static IServiceCollection AddMessageBroker(
             this IServiceCollection services,
             IConfiguration configuration,
-            IEnumerable<Assembly>? consumerAssembly = null,
+            Assembly? consumerAssembly = null,
             Action<IRetryConfigurator>? retryConfigurator = null
             )
         {
@@ -28,8 +28,8 @@ namespace FastBuy.Shared.Library.Messaging
             //MassTransint and RabbitMq registration
             services.AddMassTransit(configure =>
             {
-                if (consumerAssembly is not null && consumerAssembly.Any())
-                    consumerAssembly.ToList().ForEach(a => configure.AddConsumers(a));
+                if (consumerAssembly is not null)
+                    configure.AddConsumers(consumerAssembly);
 
                 configure.UsingRabbitMq((context, configurator) =>
                 {

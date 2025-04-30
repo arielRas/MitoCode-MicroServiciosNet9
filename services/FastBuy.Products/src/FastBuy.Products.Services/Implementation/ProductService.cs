@@ -1,8 +1,8 @@
 ﻿using FastBuy.Products.Contracts.DTOs;
-using FastBuy.Products.Contracts.Events;
 using FastBuy.Products.Entities;
 using FastBuy.Products.Services.Abstractions;
 using FastBuy.Products.Services.Mappers;
+using FastBuy.Shared.Events.Events.Products;
 using FastBuy.Shared.Library.Repository.Abstractions;
 using MassTransit;
 
@@ -58,7 +58,7 @@ namespace FastBuy.Products.Services.Implementation
         {
             await _repository.DeleteAsync(id);
 
-            await _publisher.Publish(new ProductDeletedEvent(id));
+            await _publisher.Publish(new ProductDeletedEvent { Id = id});
         }
     }
 }

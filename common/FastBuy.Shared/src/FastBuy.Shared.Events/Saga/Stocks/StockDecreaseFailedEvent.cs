@@ -6,7 +6,8 @@ namespace FastBuy.Shared.Events.Saga.Stocks
     public record StockDecreaseFailedEvent : CorrelatedBy<Guid>
     {
         public Guid CorrelationId { get; set; }
-        public IEnumerable<OrderItem>? Items { get; set; }
+        public IEnumerable<OrderItem>? DiscountedItems { get; set; }
+        public IEnumerable<OrderItem>? NonDiscountedItems { get; set; }
         public string? Reason { get; set; }
     }
 }
