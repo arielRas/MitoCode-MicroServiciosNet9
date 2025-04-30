@@ -2,21 +2,19 @@
 {
     public class NonExistentProductException : AsynchronousMessagingException
     {
-        public Guid ProductId { get; }
-
-        public NonExistentProductException(Guid correlationId, Guid productId) : base(correlationId)
+        public NonExistentProductException(Guid correlationId) : base(correlationId)
         {
-            ProductId = productId;
+            
         }
 
-        public NonExistentProductException(Guid correlationId, Guid productId, string message) : base(correlationId, message)
+        public NonExistentProductException(Guid correlationId, string message) : base(correlationId, message)
         {
-            ProductId = productId;
+            
         }
 
-        public NonExistentProductException(Guid correlationId, Guid productId, string message, Exception innerException) : base(correlationId, message, innerException)
+        public NonExistentProductException(Guid correlationId, string message, Exception innerException) : base(correlationId, message, innerException)
         {
-            ProductId = productId;
+            
         }
     }
 }

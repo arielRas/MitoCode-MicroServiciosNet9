@@ -2,7 +2,7 @@
 
 namespace FastBuy.Shared.Events.Saga.Orders
 {
-    public record OrderCreatedEvent : CorrelatedBy<Guid>
+    public record OrderCreatedEvent
     {
         public Guid CorrelationId { get; set; }
         public Guid OrderId { get; set; }

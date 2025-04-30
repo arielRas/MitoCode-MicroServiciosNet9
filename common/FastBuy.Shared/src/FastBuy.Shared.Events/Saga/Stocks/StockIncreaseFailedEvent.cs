@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace FastBuy.Shared.Events.Saga.Stocks
 {
-    class StockIncreaseFailedEvent : CorrelatedBy<Guid>
+    class StockIncreaseFailedEvent
     {
         public Guid CorrelationId { get; set; }
         public IEnumerable<OrderItem>? IncreadedItems { get; set; }

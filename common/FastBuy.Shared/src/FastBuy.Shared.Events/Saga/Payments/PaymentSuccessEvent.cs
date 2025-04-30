@@ -2,7 +2,7 @@
 
 namespace FastBuy.Shared.Events.Saga.Payments
 {
-    public record PaymentSuccessEvent : CorrelatedBy<Guid>
+    public record PaymentSuccessEvent
     {
         public Guid CorrelationId {  get; set; }
     }

@@ -2,7 +2,7 @@
 
 namespace FastBuy.Shared.Events.Saga.Stocks
 {
-    public record StockDecreasedEvent : CorrelatedBy<Guid>
+    public record StockDecreasedEvent
     {
         public Guid CorrelationId { get; set; }
     }
