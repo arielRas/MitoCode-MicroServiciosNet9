@@ -1,8 +1,8 @@
 ﻿using FastBuy.Orders.Contracts.DTOs;
-using FastBuy.Orders.Contracts.Events;
 using FastBuy.Orders.Repository.Repositories.Abstractions;
 using FastBuy.Orders.Services.Abstractions;
 using FastBuy.Orders.Services.Mappers;
+using FastBuy.Shared.Events.Saga.Orders;
 using MassTransit;
 
 namespace FastBuy.Orders.Services.Implementations
@@ -28,15 +28,10 @@ namespace FastBuy.Orders.Services.Implementations
             var orderCreateEvent = new OrderCreatedEvent
             {
                 CorrelationId = newOrder.Id,
-                OrderItems = orderDto.OrderItems,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.UtcNow
             };
 
-            var stockDecreaseEvent = new StockDecreaseEvent
-            {
-                CorrelationId = newOrder.Id,
-                Items = orderDto.OrderItems
-            };
+            var stockDecreaseEvent = newOrder.ToStockDecreaseEvent(newId);
 
             await _publisher.Publish(orderCreateEvent, ctx =>
             {

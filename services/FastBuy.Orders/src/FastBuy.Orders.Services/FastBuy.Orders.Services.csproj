@@ -7,15 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastBuy.Products.Contracts" Version="1.0.2" />
-    <PackageReference Include="FastBuy.Shared.Events" Version="1.0.2" />
-    <PackageReference Include="FastBuy.Shared.Library" Version="1.0.11" />
-    <PackageReference Include="Fastbuy.Stocks.Contracts" Version="1.0.0" />
+    <ProjectReference Include="..\FastBuy.Orders.Contracts\FastBuy.Orders.Contracts.csproj" />
+    <ProjectReference Include="..\FastBuy.Orders.Repository\FastBuy.Orders.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\FastBuy.Orders.Contracts\FastBuy.Orders.Contracts.csproj" />
-    <ProjectReference Include="..\FastBuy.Orders.Repository\FastBuy.Orders.Repository.csproj" />
+    <PackageReference Include="FastBuy.Shared.Events" Version="1.0.5" />
   </ItemGroup>
 
 </Project>

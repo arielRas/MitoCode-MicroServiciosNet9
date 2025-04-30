@@ -1,5 +1,5 @@
 ﻿using FastBuy.Orders.Entities;
-using FastBuy.Products.Contracts.Events;
+using FastBuy.Shared.Events.Events.Products;
 
 namespace FastBuy.Orders.Services.Mappers
 {

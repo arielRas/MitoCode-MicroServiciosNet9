@@ -1,10 +1,8 @@
-﻿using FastBuy.Orders.Contracts.Events;
-using FastBuy.Orders.Entities.Settings;
+﻿using FastBuy.Orders.Entities.Settings;
 using FastBuy.Orders.Repository.Database;
 using FastBuy.Orders.Repository.Saga;
 using FastBuy.Orders.Services.Consumers;
 using FastBuy.Orders.Services.StateMachines;
-using FastBuy.Products.Contracts.Events;
 using MassTransit;
 using System.Reflection;
 

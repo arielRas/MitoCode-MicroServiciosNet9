@@ -1,9 +1,9 @@
-﻿using FastBuy.Orders.Repository.Database;
+﻿using FastBuy.Orders.Entities.Settings;
+using FastBuy.Orders.Repository.Database;
 using FastBuy.Orders.Repository.Repositories.Abstractions;
 using FastBuy.Orders.Repository.Repositories.Implementation;
 using FastBuy.Orders.Services.Abstractions;
 using FastBuy.Orders.Services.Implementations;
-using FastBuy.Shared.Library.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Api.Extensions

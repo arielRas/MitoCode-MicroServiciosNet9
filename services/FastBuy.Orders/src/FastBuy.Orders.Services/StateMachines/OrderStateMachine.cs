@@ -1,6 +1,6 @@
-﻿using FastBuy.Orders.Contracts.Events;
-using FastBuy.Orders.Repository.Saga;
-using FastBuy.Stocks.Contracts.Events;
+﻿using FastBuy.Orders.Repository.Saga;
+using FastBuy.Shared.Events.Saga.Orders;
+using FastBuy.Shared.Events.Saga.Stocks;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +19,8 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
 
     public Event<OrderCreatedEvent> OrderCreated { get; }
     public Event<StockDecreasedEvent> StockDecreased { get; }
-    public Event<StockFailedDecreaseEvent> StockFailedDecrease { get; }
+    public Event<StockDecreaseFailedEvent> StockFailedDecrease { get; }
+    public Event<StockIncreaseFailedEvent> StockFailedIncrease { get; }
 
 
     public OrderStateMachine(ILogger<OrderStateMachine> logger)
@@ -36,14 +37,19 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
         Event(() => OrderCreated, x =>
         {
             x.CorrelateById(context => context.Message.CorrelationId);
-        }); 
-        
+        });
+
+        Event(() => StockDecreased, x =>
+        {
+            x.CorrelateById(context => context.Message.CorrelationId);
+        });
+
         Event(() => StockFailedDecrease, x =>
         {
             x.CorrelateById(context => context.Message.CorrelationId);
         });
 
-        Event(() => StockDecreased, x =>
+        Event(() => StockFailedIncrease, x =>
         {
             x.CorrelateById(context => context.Message.CorrelationId);
         });

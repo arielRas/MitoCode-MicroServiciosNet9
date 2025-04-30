@@ -1,6 +1,6 @@
 ﻿using FastBuy.Orders.Repository.Repositories.Abstractions;
 using FastBuy.Orders.Services.Mappers;
-using FastBuy.Products.Contracts.Events;
+using FastBuy.Shared.Events.Events.Products;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 

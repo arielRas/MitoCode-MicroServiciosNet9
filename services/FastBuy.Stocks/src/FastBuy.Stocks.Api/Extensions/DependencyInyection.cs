@@ -7,7 +7,6 @@ using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Abstractions;
 using FastBuy.Stocks.Services.Clients;
 using FastBuy.Stocks.Services.Consumers;
-using FastBuy.Stocks.Services.Exceptions;
 using FastBuy.Stocks.Services.Implementations;
 using MassTransit;
 
