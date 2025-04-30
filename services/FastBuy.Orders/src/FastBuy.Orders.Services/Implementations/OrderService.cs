@@ -38,9 +38,15 @@ namespace FastBuy.Orders.Services.Implementations
                 Items = orderDto.OrderItems
             };
 
-            await _publisher.Publish(orderCreateEvent);
+            await _publisher.Publish(orderCreateEvent, ctx =>
+            {
+                ctx.CorrelationId = newOrder.Id;
+            });
 
-            await _publisher.Publish(stockDecreaseEvent);
+            await _publisher.Publish(stockDecreaseEvent, ctx =>
+            {
+                ctx.CorrelationId = newOrder.Id;
+            });
         }
     }
 }

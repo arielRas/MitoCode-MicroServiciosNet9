@@ -38,14 +38,24 @@ public class DecreaseStockConsumer : IConsumer<StockDecreaseEvent>
                 await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
             }
 
-            await context.Publish(new StockDecreasedEvent { CorrelationId = message.CorrelationId });
+            var stockDecreasedEvent = new StockDecreasedEvent { CorrelationId = message.CorrelationId };
+
+            await context.Publish(stockDecreasedEvent, ctx =>
+            {
+                ctx.CorrelationId = context.CorrelationId;
+            });
         }
         catch (AsynchronousMessagingException ex)
         {
-            await context.Publish(new StockFailedDecreaseEvent
+            var stockFailedDecrese = new StockFailedDecreaseEvent
             {
                 CorrelationId = ex.CorrelationId,
                 Reason = ex.Message
+            };
+
+            await context.Publish(stockFailedDecrese, ctx =>
+            {
+                ctx.CorrelationId = context.CorrelationId;
             });
         }
     }

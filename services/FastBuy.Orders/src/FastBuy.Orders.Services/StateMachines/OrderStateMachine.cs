@@ -4,84 +4,83 @@ using FastBuy.Stocks.Contracts.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
-namespace FastBuy.Orders.Services.StateMachines
+namespace FastBuy.Orders.Services.StateMachines;
+
+public class OrderStateMachine : MassTransitStateMachine<OrderState>
 {
-    public class OrderStateMachine : MassTransitStateMachine<OrderState>
+    private readonly ILogger<OrderStateMachine> _logger;
+
+    public State Created { get; }
+    public State AwaitingStocksDecrease  { get; }
+    public State AwaitingPayment { get; }
+    public State Rejected { get; }
+    public State Completed { get; }
+
+
+    public Event<OrderCreatedEvent> OrderCreated { get; }
+    public Event<StockDecreasedEvent> StockDecreased { get; }
+    public Event<StockFailedDecreaseEvent> StockFailedDecrease { get; }
+
+
+    public OrderStateMachine(ILogger<OrderStateMachine> logger)
     {
-        private readonly ILogger<OrderStateMachine> _logger;
+        _logger = logger;
+        InstanceState(state => state.CurrentState);
+        ConfigureEvents();
+        ConfigureInitialState();
+        ConfigureAwaitingStoksDecrease();
+    }
 
-        public State Created { get; }
-        public State AwaitingStocksDecrease  { get; }
-        public State AwaitingPayment { get; }
-        public State Rejected { get; }
-        public State Completed { get; }
-
-
-        public Event<OrderCreatedEvent> OrderCreated { get; }
-        public Event<StockDecreasedEvent> StockDecreased { get; }
-        public Event<StockFailedDecreaseEvent> StockFailedDecrease { get; }
-
-
-        public OrderStateMachine(ILogger<OrderStateMachine> logger)
+    private void ConfigureEvents()
+    {
+        Event(() => OrderCreated, x =>
         {
-            _logger = logger;
-            InstanceState(state => state.CurrentState);
-            ConfigureEvents();
-            ConfigureInitialState();
-            ConfigureAwaitingStoksDecrease();
-        }
-
-        private void ConfigureEvents()
+            x.CorrelateById(context => context.Message.CorrelationId);
+        }); 
+        
+        Event(() => StockFailedDecrease, x =>
         {
-            Event(() => OrderCreated, x =>
+            x.CorrelateById(context => context.Message.CorrelationId);
+        });
+
+        Event(() => StockDecreased, x =>
+        {
+            x.CorrelateById(context => context.Message.CorrelationId);
+        });
+    }
+
+    private void ConfigureInitialState()
+    {
+        Initially(
+            When(OrderCreated).Then(context =>
             {
-                x.CorrelateById(context => context.Message.CorrelationId);
-            }); 
-            
-            Event(() => StockFailedDecrease, x =>
-            {
-                x.CorrelateById(context => context.Message.CorrelationId);
-            });
+                context.Saga.CreatedAt = DateTime.UtcNow;
+                context.Saga.LastUpdate = DateTime.UtcNow;
+                context.Saga.CurrentState = nameof(AwaitingStocksDecrease);
+                _logger.LogInformation($"[SAGA] Order create - CorrelationId {context.Saga.CorrelationId}");
+            })
+            .TransitionTo(AwaitingStocksDecrease)
+        );
+    }
 
-            Event(() => StockDecreased, x =>
-            {
-                x.CorrelateById(context => context.Message.CorrelationId);
-            });
-        }
+    private void ConfigureAwaitingStoksDecrease()
+    {
+        During(AwaitingStocksDecrease,
+             When(StockDecreased).Then(context =>
+             {
+                 context.Saga.LastUpdate = DateTime.UtcNow;
+                 context.Saga.CurrentState = nameof(Completed);
+                 _logger.LogInformation($"[SAGA] Decreased stock - CorrelationId {context.Saga.CorrelationId}");
+             })  
+             .TransitionTo(Completed),
 
-        private void ConfigureInitialState()
-        {
-            Initially(
-                When(OrderCreated).Then(context =>
-                {
-                    context.Saga.CreatedAt = DateTime.UtcNow;
-                    context.Saga.LastUpdate = DateTime.UtcNow;
-                    context.Saga.CurrentState = nameof(OrderCreated);
-                    _logger.LogInformation($"[SAGA] Order create - CorrelationId {context.Saga.CorrelationId}");
-                })
-                .TransitionTo(AwaitingStocksDecrease)
-            );
-        }
-
-        private void ConfigureAwaitingStoksDecrease()
-        {
-            During(AwaitingStocksDecrease,
-                 When(StockDecreased).Then(context =>
-                 {
-                     context.Saga.LastUpdate = DateTime.UtcNow;
-                     context.Saga.CurrentState = nameof(Completed);
-                     _logger.LogInformation($"[SAGA] Decreased stock - CorrelationId {context.Saga.CorrelationId}");
-                 })  
-                 .TransitionTo(Completed),
-
-                 When(StockFailedDecrease).Then(context =>
-                 {                     
-                     context.Saga.LastUpdate = DateTime.UtcNow;
-                     context.Saga.CurrentState = nameof(Rejected);
-                     _logger.LogInformation($"[SAGA] Failed decrease stock - CorrelationId {context.Saga.CorrelationId} - Reason: {context.Message.Reason}");
-                 })
-                 .TransitionTo(Rejected)
-            );
-        }
+             When(StockFailedDecrease).Then(context =>
+             {                     
+                 context.Saga.LastUpdate = DateTime.UtcNow;
+                 context.Saga.CurrentState = nameof(Rejected);
+                 _logger.LogInformation($"[SAGA] Failed decrease stock - CorrelationId {context.Saga.CorrelationId} - Reason: {context.Message.Reason}");
+             })
+             .TransitionTo(Rejected)
+        );
     }
 }
