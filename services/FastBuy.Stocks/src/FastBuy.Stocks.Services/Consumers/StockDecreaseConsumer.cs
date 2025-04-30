@@ -9,12 +9,12 @@ using System.Linq.Expressions;
 
 namespace FastBuy.Stocks.Services.Consumers;
 
-public class DecreaseStockConsumer : IConsumer<StockDecreaseRequestedEvent>
+public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
 {
     private readonly IRepository<StockItem> _stockRepository;
-    private readonly ILogger<DecreaseStockConsumer> _logger;
+    private readonly ILogger<StockDecreaseConsumer> _logger;
 
-    public DecreaseStockConsumer(IRepository<StockItem> stockRepository, ILogger<DecreaseStockConsumer> logger)
+    public StockDecreaseConsumer(IRepository<StockItem> stockRepository, ILogger<StockDecreaseConsumer> logger)
     {
         _stockRepository = stockRepository;
         _logger = logger;
@@ -33,7 +33,7 @@ public class DecreaseStockConsumer : IConsumer<StockDecreaseRequestedEvent>
                 Expression<Func<StockItem, bool>> filter = x => x.ProductId == item.ProductId;
 
                 var stockItem = await _stockRepository.GetAsync(filter)
-                    ?? throw new NonExistentProductException(message.CorrelationId, item.ProductId, $"The product with id {item.ProductId} does not exist");
+                    ?? throw new NonExistentProductException(message.CorrelationId, $"The product with id {item.ProductId} does not exist");
 
                 if (item.Quantity > stockItem.Stock)
                     throw new InsufficientStockException(message.CorrelationId, $"Insufficient stock for productId: {item.ProductId}");
@@ -45,9 +45,15 @@ public class DecreaseStockConsumer : IConsumer<StockDecreaseRequestedEvent>
                 stockItemsDiscounted.Add(item);
             }
 
-            var stockDecreasedEvent = new StockDecreasedEvent { CorrelationId = message.CorrelationId };
+            var stockDecreasedEvent = new StockDecreasedEvent 
+            {
+                CorrelationId = message.CorrelationId 
+            };
 
-            await context.Publish(stockDecreasedEvent);
+            await context.Publish(stockDecreasedEvent, ctx =>
+            {
+                ctx.CorrelationId = context.CorrelationId;
+            });
         }
         catch (AsynchronousMessagingException ex)
         {
@@ -59,7 +65,10 @@ public class DecreaseStockConsumer : IConsumer<StockDecreaseRequestedEvent>
                 Reason = ex.Message
             };
 
-            await context.Publish(stockFailedDecrese);
+            await context.Publish(stockFailedDecrese, ctx =>
+            {
+                ctx.CorrelationId = context.CorrelationId;
+            });
 
             _logger.LogError($"[SAGA] - Generate {nameof(StockDecreaseFailedEvent)} - Reason: {ex.Message}");
         }
@@ -69,12 +78,3 @@ public class DecreaseStockConsumer : IConsumer<StockDecreaseRequestedEvent>
         }
     }    
 }
-
-/*If the event does not implement the MassTransit CorrelatedBy<T> interface, you must manually set the CorrelationId in the context as follows:
-
-await context.Publish(stockFailedDecrese, ctx =>
-{
-    ctx.CorrelationId = context.CorrelationId;
-});
-
-*/

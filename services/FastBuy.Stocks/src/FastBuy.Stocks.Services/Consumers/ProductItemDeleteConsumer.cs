@@ -1,4 +1,4 @@
-﻿using FastBuy.Products.Contracts.Events;
+﻿using FastBuy.Shared.Events.Events.Products;
 using FastBuy.Shared.Library.Repository.Abstractions;
 using FastBuy.Stocks.Entities;
 using MassTransit;
