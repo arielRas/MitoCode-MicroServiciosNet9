@@ -1,5 +1,6 @@
 ﻿using FastBuy.Orders.Contracts.Events;
 using FastBuy.Orders.Repository.Saga;
+using FastBuy.Stocks.Contracts.Events;
 using MassTransit;
 using Microsoft.Extensions.Logging;
 
@@ -68,13 +69,15 @@ namespace FastBuy.Orders.Services.StateMachines
                  When(StockDecreased).Then(context =>
                  {
                      context.Saga.LastUpdate = DateTime.UtcNow;
+                     context.Saga.CurrentState = nameof(Completed);
                      _logger.LogInformation($"[SAGA] Decreased stock - CorrelationId {context.Saga.CorrelationId}");
                  })  
                  .TransitionTo(Completed),
 
                  When(StockFailedDecrease).Then(context =>
-                 {
+                 {                     
                      context.Saga.LastUpdate = DateTime.UtcNow;
+                     context.Saga.CurrentState = nameof(Rejected);
                      _logger.LogInformation($"[SAGA] Failed decrease stock - CorrelationId {context.Saga.CorrelationId} - Reason: {context.Message.Reason}");
                  })
                  .TransitionTo(Rejected)

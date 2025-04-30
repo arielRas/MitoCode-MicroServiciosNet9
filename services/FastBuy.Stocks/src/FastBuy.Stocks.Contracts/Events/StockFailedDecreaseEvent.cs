@@ -1,6 +1,6 @@
-﻿namespace FastBuy.Orders.Contracts.Events
+﻿namespace FastBuy.Stocks.Contracts.Events
 {
-    public class StockFailedDecreaseEvent
+    public record StockFailedDecreaseEvent
     {
         public Guid CorrelationId { get; set; }
         public Guid ProductId { get; set; }

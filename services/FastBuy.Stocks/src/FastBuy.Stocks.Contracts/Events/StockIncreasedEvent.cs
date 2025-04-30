@@ -1,6 +1,6 @@
 ﻿namespace FastBuy.Stocks.Contracts.Events
 {
-    public record IncreasedStockEvent
+    public record StockIncreasedEvent
     {
         public Guid CorrelationId { get; set; }
     }

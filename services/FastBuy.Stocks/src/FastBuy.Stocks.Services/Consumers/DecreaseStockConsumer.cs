@@ -1,42 +1,52 @@
-﻿using FastBuy.Shared.Library.Repository.Abstractions;
+﻿using FastBuy.Orders.Contracts.Events;
+using FastBuy.Shared.Library.Repository.Abstractions;
 using FastBuy.Stocks.Contracts.Events;
 using FastBuy.Stocks.Entities;
 using FastBuy.Stocks.Services.Exceptions;
 using MassTransit;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace FastBuy.Stocks.Services.Consumers
+namespace FastBuy.Stocks.Services.Consumers;
+
+public class DecreaseStockConsumer : IConsumer<StockDecreaseEvent>
 {
-    public class DecreaseStockConsumer : IConsumer<DecreaseStockEvent>
+    private readonly IRepository<StockItem> _stockRepository;
+
+    public DecreaseStockConsumer(IRepository<StockItem> stockRepository)
     {
-        private readonly IRepository<StockItem> _stockRepository;
-        private readonly IRepository<ProductItem> _productRepository;
+        _stockRepository = stockRepository;
+    }
 
-        public DecreaseStockConsumer(IRepository<StockItem> stockRepository, IRepository<ProductItem> productRepository)
-        {
-            _stockRepository = stockRepository;
-            _productRepository = productRepository;
-        }
-
-        public async Task Consume(ConsumeContext<DecreaseStockEvent> context)
+    public async Task Consume(ConsumeContext<StockDecreaseEvent> context)
+    {
+        try
         {
             var message = context.Message;
 
-            Expression<Func<StockItem, bool>> filter = x => x.ProductId == message.ProductId;
+            foreach (var item in message.Items)
+            {
+                Expression<Func<StockItem, bool>> filter = x => x.ProductId == item.ProductId;
 
-            var stockItem = await _stockRepository.GetAsync(filter) 
-                ?? throw new NonExistentProductException(message.ProductId);
+                var stockItem = await _stockRepository.GetAsync(filter)
+                    ?? throw new NonExistentProductException(context.CorrelationId ?? Guid.Empty, $"The product with id {item.ProductId} does not exist");
 
-            stockItem.Stock -= message.Quantity;
+                if (item.Quantity > stockItem.Stock)
+                    throw new InsufficientStockException(context.CorrelationId ?? Guid.Empty, $"Insufficient stock for productId: {item.ProductId}");
 
-            await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
+                stockItem.Stock -= item.Quantity;
 
-            await context.Publish( new DecreasedStockEvent { CorrelationId = message.CorrelationId });
+                await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
+            }
+
+            await context.Publish(new StockDecreasedEvent { CorrelationId = message.CorrelationId });
+        }
+        catch (AsynchronousMessagingException ex)
+        {
+            await context.Publish(new StockFailedDecreaseEvent
+            {
+                CorrelationId = ex.CorrelationId,
+                Reason = ex.Message
+            });
         }
     }
 }

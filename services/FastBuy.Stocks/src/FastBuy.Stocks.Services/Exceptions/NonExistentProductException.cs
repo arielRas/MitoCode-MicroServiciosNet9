@@ -1,13 +1,12 @@
 ﻿namespace FastBuy.Stocks.Services.Exceptions
 {
     [Serializable]
-    public class NonExistentProductException : Exception
+    public class NonExistentProductException : AsynchronousMessagingException
     {
-        public Guid ProductId { get; }
 
-        public NonExistentProductException(Guid ProductId) : base($"product with id {ProductId} does not exist")
+        public NonExistentProductException(Guid correlationId, string message) : base(correlationId, message)
         {
-            this.ProductId = ProductId;
+            
         }
     }
 }

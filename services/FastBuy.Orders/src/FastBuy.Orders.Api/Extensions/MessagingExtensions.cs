@@ -6,6 +6,7 @@ using FastBuy.Orders.Services.Consumers;
 using FastBuy.Orders.Services.StateMachines;
 using FastBuy.Products.Contracts.Events;
 using MassTransit;
+using System.Reflection;
 
 namespace FastBuy.Orders.Api.Extensions
 {
@@ -23,7 +24,7 @@ namespace FastBuy.Orders.Api.Extensions
             {                
                 configure.AddConsumers(typeof(ProductChangeConsumer).Assembly);
 
-                //configure.AddConsumers(typeof().Assembly);
+                configure.AddConsumers(Assembly.GetEntryAssembly());
 
                 configure.UsingRabbitMq((context, configurator) =>
                 {
