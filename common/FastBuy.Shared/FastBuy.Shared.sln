@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.13.35828.75 d17.13
+VisualStudioVersion = 17.13.35828.75
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Shared.Library", "src\FastBuy.Shared.Library\FastBuy.Shared.Library.csproj", "{DA209039-5802-46B7-B324-97975178BD6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastBuy.Shared.Events", "src\FastBuy.Shared.Events\FastBuy.Shared.Events.csproj", "{4B89F621-3DD4-44AB-86A6-2732DC5998DE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DA209039-5802-46B7-B324-97975178BD6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA209039-5802-46B7-B324-97975178BD6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA209039-5802-46B7-B324-97975178BD6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B89F621-3DD4-44AB-86A6-2732DC5998DE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B89F621-3DD4-44AB-86A6-2732DC5998DE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B89F621-3DD4-44AB-86A6-2732DC5998DE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B89F621-3DD4-44AB-86A6-2732DC5998DE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
