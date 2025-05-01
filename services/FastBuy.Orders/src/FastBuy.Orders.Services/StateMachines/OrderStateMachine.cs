@@ -12,6 +12,7 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
 
     public State Created { get; }
     public State AwaitingStocksDecrease  { get; }
+    public State AwaitingStocksIncrease { get; }
     public State AwaitingPayment { get; }
     public State Rejected { get; }
     public State Completed { get; }
@@ -19,6 +20,7 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
 
     public Event<OrderCreatedEvent> OrderCreated { get; }
     public Event<StockDecreasedEvent> StockDecreased { get; }
+    public Event<StockIncreasedEvent> StockIncreased { get; }
     public Event<StockDecreaseFailedEvent> StockFailedDecrease { get; }
     public Event<StockIncreaseFailedEvent> StockFailedIncrease { get; }
 
@@ -30,6 +32,7 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
         ConfigureEvents();
         ConfigureInitialState();
         ConfigureAwaitingStoksDecrease();
+        ConfigureAwaitingStockIncrease();
     }
 
     private void ConfigureEvents()
@@ -61,8 +64,11 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
             When(OrderCreated).Then(context =>
             {
                 context.Saga.CreatedAt = DateTime.UtcNow;
+
                 context.Saga.LastUpdate = DateTime.UtcNow;
+
                 context.Saga.CurrentState = nameof(AwaitingStocksDecrease);
+
                 _logger.LogInformation($"[SAGA] Order create - CorrelationId {context.Saga.CorrelationId}");
             })
             .TransitionTo(AwaitingStocksDecrease)
@@ -75,18 +81,63 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
              When(StockDecreased).Then(context =>
              {
                  context.Saga.LastUpdate = DateTime.UtcNow;
+
                  context.Saga.CurrentState = nameof(Completed);
+
                  _logger.LogInformation($"[SAGA] Decreased stock - CorrelationId {context.Saga.CorrelationId}");
              })  
              .TransitionTo(Completed),
 
-             When(StockFailedDecrease).Then(context =>
-             {                     
+
+             When(StockFailedDecrease).ThenAsync(async context =>
+             {
+                 _logger.LogInformation($"[SAGA] Failed decrease stock - CorrelationId {context.Saga.CorrelationId} - Reason: {context.Message.Reason ?? "Unknown Reason"}");
+
+                 var message = context.Message;
+
                  context.Saga.LastUpdate = DateTime.UtcNow;
-                 context.Saga.CurrentState = nameof(Rejected);
-                 _logger.LogInformation($"[SAGA] Failed decrease stock - CorrelationId {context.Saga.CorrelationId} - Reason: {context.Message.Reason}");
+
+                 if (message.DiscountedItems is not null && message.DiscountedItems.Any())
+                 {
+                     var stockIncreasedRequested = new StockIncreaseRequestedEvent
+                     {
+                         CorrelationId = message.CorrelationId,
+                         Items = message.DiscountedItems
+                     };
+
+                     await context.Publish(stockIncreasedRequested, ctx =>
+                     {
+                         ctx.CorrelationId = message.CorrelationId;
+                     });                    
+
+                     await context.TransitionToState(AwaitingStocksIncrease);
+
+                     context.Saga.CurrentState = nameof(AwaitingStocksIncrease);
+
+                     _logger.LogInformation($"[SAGA] Generate {nameof(StockIncreaseRequestedEvent)} - CorrelationId {stockIncreasedRequested.CorrelationId}");
+                 }
+                 else
+                 {
+                     context.Saga.CurrentState = nameof(Rejected);
+
+                     await context.TransitionToState(Rejected); 
+                 }             
              })
-             .TransitionTo(Rejected)
+        );
+    }
+
+    private void ConfigureAwaitingStockIncrease()
+    {
+        During(AwaitingStocksIncrease,
+            When(StockIncreased).Then(context =>
+            {
+                context.Saga.LastUpdate = DateTime.UtcNow;
+
+                context.Saga.CurrentState = nameof(Rejected);
+
+                _logger.LogInformation($"[SAGA] - Received {nameof(StockIncreasedEvent)} - Order change to {nameof(Rejected)} state - CorrelationId {context.Saga.CorrelationId}");
+            })
+            .TransitionTo(Rejected)
         );
     }
 }

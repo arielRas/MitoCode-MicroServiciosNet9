@@ -9,7 +9,7 @@ using System.Linq.Expressions;
 
 namespace FastBuy.Stocks.Services.Consumers
 {
-    public class StockIncreaseConsumer : IConsumer<StockIncreaseEvent>
+    public class StockIncreaseConsumer : IConsumer<StockIncreaseRequestedEvent>
     {
         private readonly IRepository<StockItem> _stockRepository;
         private readonly ILogger<StockIncreaseConsumer> _logger;
@@ -20,7 +20,7 @@ namespace FastBuy.Stocks.Services.Consumers
             _logger = logger;
         }
 
-        public async Task Consume(ConsumeContext<StockIncreaseEvent> context)
+        public async Task Consume(ConsumeContext<StockIncreaseRequestedEvent> context)
         {
             var message = context.Message;
 
@@ -37,10 +37,12 @@ namespace FastBuy.Stocks.Services.Consumers
 
                     stockItem.Stock += item.Quantity;
 
+                    await _stockRepository.UpdateAsync(stockItem.Id, stockItem);
+
                     stockItemsIncreased.Add(item);
                 }
 
-                var stockDecreasedEvent = new StockDecreasedEvent
+                var stockDecreasedEvent = new StockIncreasedEvent
                 {
                     CorrelationId = message.CorrelationId,
                 };
@@ -49,9 +51,13 @@ namespace FastBuy.Stocks.Services.Consumers
                 {
                     ctx.CorrelationId = context.CorrelationId;
                 });
+
+                _logger.LogInformation($"[SAGA] - Generate {nameof(StockIncreasedEvent)} - CorrelationId; {message.CorrelationId}");
             }
-            catch (NonExistentProductException ex)
+            catch (AsynchronousMessagingException ex)
             {
+                _logger.LogError($"[SAGA] - Error: {ex.Message}");
+
                 var stockIncreasedFailedEvent = new StockIncreaseFailedEvent
                 {
                     CorrelationId = ex.CorrelationId,
@@ -63,9 +69,9 @@ namespace FastBuy.Stocks.Services.Consumers
                 await context.Publish(stockIncreasedFailedEvent, ctx =>
                 {
                     ctx.CorrelationId = context.CorrelationId;
-                });
+                });               
 
-                _logger.LogError($"[SAGA] - Generate {nameof(StockIncreaseFailedEvent)} - Reason: {ex.Message}");
+                _logger.LogInformation($"[SAGA] - Generate {nameof(StockIncreaseFailedEvent)} - Reason: {ex.Message}");
 
             }
             catch (Exception ex)

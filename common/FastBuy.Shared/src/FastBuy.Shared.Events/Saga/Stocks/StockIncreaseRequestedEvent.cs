@@ -3,7 +3,7 @@ using MassTransit;
 
 namespace FastBuy.Shared.Events.Saga.Stocks
 {
-    public record StockIncreaseEvent
+    public record StockIncreaseRequestedEvent
     {        
         public Guid CorrelationId { get; set; }
         public required IEnumerable<OrderItem> Items { get; set; }

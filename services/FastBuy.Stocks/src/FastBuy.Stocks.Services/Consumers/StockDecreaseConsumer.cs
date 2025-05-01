@@ -54,9 +54,13 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
             {
                 ctx.CorrelationId = context.CorrelationId;
             });
+
+            _logger.LogInformation($"[SAGA] - Generate {nameof(StockDecreasedEvent)}");
         }
         catch (AsynchronousMessagingException ex)
         {
+            _logger.LogError($"[SAGA] - Error: {ex.Message}");
+
             var stockFailedDecrese = new StockDecreaseFailedEvent
             {
                 CorrelationId = ex.CorrelationId,
@@ -70,7 +74,7 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
                 ctx.CorrelationId = context.CorrelationId;
             });
 
-            _logger.LogError($"[SAGA] - Generate {nameof(StockDecreaseFailedEvent)} - Reason: {ex.Message}");
+            _logger.LogInformation($"[SAGA] - Generate {nameof(StockDecreaseFailedEvent)} - Reason: {ex.Message}");
         }
         catch (Exception ex)
         {
