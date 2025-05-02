@@ -59,7 +59,7 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
         }
         catch (AsynchronousMessagingException ex)
         {
-            _logger.LogError($"[SAGA] - Error: {ex.Message}");
+            _logger.LogError($"[SAGA] - Error in asynchronous communication - {ex.Message}");
 
             var stockFailedDecrese = new StockDecreaseFailedEvent
             {
@@ -74,7 +74,7 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
                 ctx.CorrelationId = context.CorrelationId;
             });
 
-            _logger.LogInformation($"[SAGA] - Generate {nameof(StockDecreaseFailedEvent)} - Reason: {ex.Message}");
+            _logger.LogInformation($"[SAGA] - Send {nameof(StockDecreaseFailedEvent)}");
         }
         catch (Exception ex)
         {

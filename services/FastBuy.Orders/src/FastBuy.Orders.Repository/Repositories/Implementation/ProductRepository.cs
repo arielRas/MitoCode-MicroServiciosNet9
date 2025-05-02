@@ -17,6 +17,8 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
                 ?? throw new KeyNotFoundException($"The product with ID {id} does not exist");
 
             product.IsActive = isActive;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

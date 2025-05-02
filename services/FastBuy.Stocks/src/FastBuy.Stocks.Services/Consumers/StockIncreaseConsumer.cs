@@ -55,8 +55,8 @@ namespace FastBuy.Stocks.Services.Consumers
                 _logger.LogInformation($"[SAGA] - Generate {nameof(StockIncreasedEvent)} - CorrelationId; {message.CorrelationId}");
             }
             catch (AsynchronousMessagingException ex)
-            {
-                _logger.LogError($"[SAGA] - Error: {ex.Message}");
+            {  
+                _logger.LogError($"[SAGA] - Error in asynchronous communication - {ex.Message}");
 
                 var stockIncreasedFailedEvent = new StockIncreaseFailedEvent
                 {
@@ -71,7 +71,7 @@ namespace FastBuy.Stocks.Services.Consumers
                     ctx.CorrelationId = context.CorrelationId;
                 });               
 
-                _logger.LogInformation($"[SAGA] - Generate {nameof(StockIncreaseFailedEvent)} - Reason: {ex.Message}");
+                _logger.LogInformation($"[SAGA] - Send {nameof(StockIncreaseFailedEvent)}");
 
             }
             catch (Exception ex)
