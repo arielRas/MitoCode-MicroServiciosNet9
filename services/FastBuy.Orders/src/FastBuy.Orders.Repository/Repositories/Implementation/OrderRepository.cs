@@ -10,5 +10,10 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
         {
 
         }
+
+        public Task<decimal> GetOrderAmountAsync(Guid orderId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

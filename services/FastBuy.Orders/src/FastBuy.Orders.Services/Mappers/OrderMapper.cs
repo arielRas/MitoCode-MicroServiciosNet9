@@ -1,5 +1,6 @@
 ﻿using FastBuy.Orders.Contracts.DTOs;
 using FastBuy.Orders.Entities;
+using FastBuy.Shared.Events.Saga.Orders;
 using FastBuy.Shared.Events.Saga.Stocks;
 
 namespace FastBuy.Orders.Services.Mappers
@@ -36,7 +37,7 @@ namespace FastBuy.Orders.Services.Mappers
             };
         }
 
-        public static StockDecreaseRequestedEvent ToStockDecreaseEvent(this Order entity, Guid correlationId)
+        public static OrderCreatedEvent ToOrderCreateEvent(this Order entity, Guid CorrelationId, decimal amount)
         {
             var orderItemsForEvent = new List<Shared.Events.Saga.Orders.OrderItem>();
 
@@ -46,16 +47,19 @@ namespace FastBuy.Orders.Services.Mappers
                     new Shared.Events.Saga.Orders.OrderItem
                     {
                         ProductId = item.ProductId,
-                        Quantity = item.Quantity
+                        Quantity = item.Quantity,
                     }
                 );
             }
 
-            return new StockDecreaseRequestedEvent
+            return new OrderCreatedEvent
             {
-                CorrelationId = correlationId,
-                Items = orderItemsForEvent
-            };
+                CorrelationId = CorrelationId,
+                OrderId = entity.Id,
+                Items = orderItemsForEvent,
+                CreatedAt = entity.CreatedAt,
+                Amount = amount
+            };            
         }
     }
 }

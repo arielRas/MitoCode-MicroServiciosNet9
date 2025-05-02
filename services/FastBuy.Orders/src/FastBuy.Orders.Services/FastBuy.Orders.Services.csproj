@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="FastBuy.Shared.Events" Version="1.0.6" />
+    <PackageReference Include="FastBuy.Shared.Events" Version="1.0.8" />
   </ItemGroup>
 
 </Project>

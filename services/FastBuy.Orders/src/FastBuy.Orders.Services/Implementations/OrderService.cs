@@ -25,20 +25,9 @@ namespace FastBuy.Orders.Services.Implementations
 
             await _orderRepository.CreateAsync(newOrder);
 
-            var orderCreateEvent = new OrderCreatedEvent
-            {
-                CorrelationId = newOrder.Id,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            var stockDecreaseEvent = newOrder.ToStockDecreaseEvent(newId);
+            var orderCreateEvent = newOrder.ToOrderCreateEvent(newId, 100);
 
             await _publisher.Publish(orderCreateEvent, ctx =>
-            {
-                ctx.CorrelationId = newOrder.Id;
-            });
-
-            await _publisher.Publish(stockDecreaseEvent, ctx =>
             {
                 ctx.CorrelationId = newOrder.Id;
             });
