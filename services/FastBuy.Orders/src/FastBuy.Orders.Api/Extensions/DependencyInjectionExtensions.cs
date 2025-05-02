@@ -1,4 +1,8 @@
 ﻿using FastBuy.Orders.Entities.Settings;
+using FastBuy.Orders.Repository.Database;
+using FastBuy.Orders.Repository.Repositories.Abstractions;
+using FastBuy.Orders.Repository.Repositories.Implementation;
+using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Api.Extensions
 {
@@ -11,10 +15,10 @@ namespace FastBuy.Orders.Api.Extensions
                 ?? throw new ArgumentException($"The {nameof(ServiceSettings)} key has not been configured in the configuration file.");
 
             //Database registration
-            //services.AddDbContext<OrdersDbContext>(options =>
-            //{
-            //    options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
-            //});
+            services.AddDbContext<OrdersDbContext>(options =>
+            {
+                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
+            });
 
 
             //Broker Message registration
@@ -22,8 +26,8 @@ namespace FastBuy.Orders.Api.Extensions
 
 
             //Services and Repository registration
-            //services.AddScoped<IProductRepository, ProductRepository>();
-            //services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IOrderRepository, OrderRepository>();
             //services.AddScoped<IOrderService, OrderService>();
 
 
