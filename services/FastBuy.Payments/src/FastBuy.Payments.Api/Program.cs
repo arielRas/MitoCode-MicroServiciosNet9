@@ -1,4 +1,6 @@
 
+using FastBuy.Payments.Api.Extensions;
+
 namespace FastBuy.Payments.Api
 {
     public class Program
@@ -6,6 +8,8 @@ namespace FastBuy.Payments.Api
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
+            builder.Services.AddApplicationServices(builder.Configuration);
 
             // Add services to the container.
 

@@ -1,4 +1,5 @@
 ﻿using FastBuy.Payments.Api.Entities;
+using FastBuy.Shared.Library.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Payments.Api.Persistence
@@ -13,8 +14,6 @@ namespace FastBuy.Payments.Api.Persistence
         public DbSet<Order> Order { get; set; }
         public DbSet<Payment> Payment { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder.UseSqlServer("Name=ConnectionStrings:DefaultConnection");
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
