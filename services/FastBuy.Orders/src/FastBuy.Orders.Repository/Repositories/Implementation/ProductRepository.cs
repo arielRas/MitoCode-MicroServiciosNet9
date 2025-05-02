@@ -8,7 +8,15 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
     {
         public ProductRepository(OrdersDbContext context) : base(context)
         {
+            
+        }
 
+        public async Task SetProductActiveAsync(Guid id, bool isActive)
+        {
+            var product = await dbSet.FindAsync(id)
+                ?? throw new KeyNotFoundException($"The product with ID {id} does not exist");
+
+            product.IsActive = isActive;
         }
     }
 }

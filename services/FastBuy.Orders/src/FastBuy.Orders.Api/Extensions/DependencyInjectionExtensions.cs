@@ -2,6 +2,8 @@
 using FastBuy.Orders.Repository.Database;
 using FastBuy.Orders.Repository.Repositories.Abstractions;
 using FastBuy.Orders.Repository.Repositories.Implementation;
+using FastBuy.Orders.Services.Abstractions;
+using FastBuy.Orders.Services.Implementations;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Api.Extensions
@@ -28,7 +30,7 @@ namespace FastBuy.Orders.Api.Extensions
             //Services and Repository registration
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
-            //services.AddScoped<IOrderService, OrderService>();
+            services.AddScoped<IOrderService, OrderService>();
 
 
             return services;

@@ -1,4 +1,6 @@
-﻿using FastBuy.Orders.Repository.Database.Entities;
+﻿using System;
+using System.Collections.Generic;
+using FastBuy.Orders.Repository.Database.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FastBuy.Orders.Repository.Database;
@@ -55,6 +57,7 @@ public partial class OrdersDbContext : DbContext
         modelBuilder.Entity<Product>(entity =>
         {
             entity.Property(e => e.ProductId).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.IsActive).HasDefaultValue(true);
         });
 
         OnModelCreatingPartial(modelBuilder);

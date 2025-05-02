@@ -23,6 +23,9 @@ public partial class Product
     [Column("PRICE", TypeName = "decimal(10, 2)")]
     public decimal Price { get; set; }
 
+    [Column("IS_ACTIVE")]
+    public bool? IsActive { get; set; }
+
     [InverseProperty("Product")]
     public virtual ICollection<OrderItem> OrderItem { get; set; } = new List<OrderItem>();
 }
