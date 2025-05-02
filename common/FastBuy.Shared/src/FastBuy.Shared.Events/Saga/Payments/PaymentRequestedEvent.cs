@@ -1,6 +1,4 @@
-﻿using MassTransit;
-
-namespace FastBuy.Shared.Events.Saga.Payments
+﻿namespace FastBuy.Shared.Events.Saga.Payments
 {
     public record PaymentRequestedEvent
     {

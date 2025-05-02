@@ -1,5 +1,4 @@
 ﻿using FastBuy.Shared.Events.Saga.Orders;
-using MassTransit;
 
 namespace FastBuy.Shared.Events.Saga.Stocks
 {

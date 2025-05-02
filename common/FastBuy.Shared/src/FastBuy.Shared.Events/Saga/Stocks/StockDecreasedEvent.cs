@@ -1,6 +1,4 @@
-﻿using MassTransit;
-
-namespace FastBuy.Shared.Events.Saga.Stocks
+﻿namespace FastBuy.Shared.Events.Saga.Stocks
 {
     public record StockDecreasedEvent
     {
