@@ -15,4 +15,11 @@
     <PackageReference Include="FastBuy.Shared.Events" Version="1.0.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Consumers\" />
+    <Folder Include="Implementations\" />
+    <Folder Include="Mappers\" />
+    <Folder Include="StateMachines\" />
+  </ItemGroup>
+
 </Project>
