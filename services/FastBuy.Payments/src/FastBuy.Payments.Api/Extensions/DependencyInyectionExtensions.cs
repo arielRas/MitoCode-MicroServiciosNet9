@@ -1,10 +1,14 @@
-﻿using FastBuy.Payments.Api.Persistence;
+﻿using FastBuy.Payments.Api.Consumers;
+using FastBuy.Payments.Api.Persistence;
 using FastBuy.Payments.Api.Persistence.Repository.Abstractions;
 using FastBuy.Payments.Api.Persistence.Repository.Implementations;
 using FastBuy.Payments.Api.Services.Abstractions;
 using FastBuy.Payments.Api.Services.Implementations;
+using FastBuy.Shared.Events.Exceptions;
 using FastBuy.Shared.Library.Configurations;
+using FastBuy.Shared.Library.Messaging;
 using FastBuy.Shared.Library.Repository.Factories;
+using MassTransit;
 
 namespace FastBuy.Payments.Api.Extensions
 {
@@ -26,6 +30,17 @@ namespace FastBuy.Payments.Api.Extensions
             //DataBase configuration
             var database = DatabaseFactory.CreateDatabase<PaymentsDbContext>(dbServiceProvider);
             database.Configure(services, configuration);
+
+            //BrokerMessage register
+            services.AddMessageBroker(
+                configuration,
+                typeof(PaymentRequestedConsumer).Assembly,
+                retryConfigurator =>
+                {
+                    retryConfigurator.Interval(3, TimeSpan.FromSeconds(4));
+                    retryConfigurator.Ignore(typeof(AsynchronousMessagingException));
+                }
+             );
 
 
             //Services register

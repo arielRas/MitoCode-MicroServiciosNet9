@@ -1,5 +1,6 @@
 ﻿using FastBuy.Payments.Api.DTOs;
 using FastBuy.Payments.Api.Entities;
+using FastBuy.Shared.Events.Saga.Payments;
 
 namespace FastBuy.Payments.Api.Mappers
 {
@@ -15,6 +16,7 @@ namespace FastBuy.Payments.Api.Mappers
                 Status = "OK"
             };
         }
+        
 
         //Payment => PaymentResponseDto
         public static PaymentResponseDto ToDto(this Payment entity)
@@ -26,5 +28,8 @@ namespace FastBuy.Payments.Api.Mappers
                 Status = entity.Status
             };
         }
+
+
+        
     }
 }

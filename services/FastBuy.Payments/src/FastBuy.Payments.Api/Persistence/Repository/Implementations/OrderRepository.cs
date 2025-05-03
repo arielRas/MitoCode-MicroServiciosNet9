@@ -18,5 +18,10 @@ namespace FastBuy.Payments.Api.Persistence.Repository.Implementations
                               .FirstOrDefaultAsync()
                               ?? throw new KeyNotFoundException($"Order with id {id} does not exist");
         }
+
+        public async Task<bool> ExistsAsync(Guid id)
+        {
+            return await dbSet.AnyAsync(o => o.OrderId == id);
+        }
     }
 }
