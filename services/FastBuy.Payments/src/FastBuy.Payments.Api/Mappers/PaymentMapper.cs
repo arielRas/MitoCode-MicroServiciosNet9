@@ -15,5 +15,16 @@ namespace FastBuy.Payments.Api.Mappers
                 Status = "OK"
             };
         }
+
+        //Payment => PaymentResponseDto
+        public static PaymentResponseDto ToDto(this Payment entity)
+        {
+            return new PaymentResponseDto
+            {
+                PaymentId = entity.OrderId,
+                CreatedAt = entity.CreatedAt,
+                Status = entity.Status
+            };
+        }
     }
 }

@@ -29,6 +29,8 @@ namespace FastBuy.Payments.Api
 
             app.MapPaymentsRoute();
 
+            app.MapOrdersRoute();
+
             app.MapControllers();
 
             app.Run();

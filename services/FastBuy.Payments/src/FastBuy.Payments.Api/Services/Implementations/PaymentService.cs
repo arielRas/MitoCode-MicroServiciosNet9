@@ -17,6 +17,14 @@ namespace FastBuy.Payments.Api.Services.Implementations
             _paymentRepository = paymentRepository;
         }
 
+        public async Task<PaymentResponseDto> GetByIdAsync(Guid id)
+        {
+            var payment = await _paymentRepository.GetByIdAsync(id)
+                ?? throw new KeyNotFoundException($"Payment with id {id} does not exist");
+
+            return payment.ToDto();            
+        }
+
 
         public async Task CreateAsync(PaymentRequestDto paymentDto)
         {
@@ -29,6 +37,6 @@ namespace FastBuy.Payments.Api.Services.Implementations
             var payment = paymentDto.ToEntity();
 
             await _paymentRepository.CreateAsync(payment);
-        }
+        }        
     }
 }

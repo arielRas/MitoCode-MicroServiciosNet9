@@ -30,6 +30,7 @@ namespace FastBuy.Payments.Api.Extensions
 
             //Services register
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
 
