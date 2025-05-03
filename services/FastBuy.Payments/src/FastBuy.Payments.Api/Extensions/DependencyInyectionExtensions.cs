@@ -1,4 +1,8 @@
 ﻿using FastBuy.Payments.Api.Persistence;
+using FastBuy.Payments.Api.Persistence.Repository.Abstractions;
+using FastBuy.Payments.Api.Persistence.Repository.Implementations;
+using FastBuy.Payments.Api.Services.Abstractions;
+using FastBuy.Payments.Api.Services.Implementations;
 using FastBuy.Shared.Library.Configurations;
 using FastBuy.Shared.Library.Repository.Factories;
 
@@ -24,8 +28,26 @@ namespace FastBuy.Payments.Api.Extensions
             database.Configure(services, configuration);
 
 
+            //Services register
+            services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<IPaymentRepository, PaymentRepository>();
+            services.AddScoped<IPaymentService, PaymentService>();
+
 
             return services;
         }
+
+        public static IServiceCollection AddPresentation(this IServiceCollection services)
+        {
+            //Controller registration
+            services.AddControllers();
+
+            //configure Swagger as an endpoint explorer
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
+
+            return services;
+        }
+
     }
 }
