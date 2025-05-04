@@ -14,9 +14,9 @@ namespace FastBuy.Payments.Api.Services.Implementations
         private readonly IPaymentRepository _paymentRepository;
         private readonly IOrderRepository _orderRepository;
         private readonly IPublishEndpoint _publisher;
-        private readonly ILogger _logger;
+        private readonly ILogger<PaymentService> _logger;
 
-        public PaymentService(IPaymentRepository paymentRepository, IOrderRepository orderRepository, IPublishEndpoint publisher, ILogger logger)
+        public PaymentService(IPaymentRepository paymentRepository, IOrderRepository orderRepository, IPublishEndpoint publisher, ILogger<PaymentService> logger)
         {
             _orderRepository = orderRepository;
             _paymentRepository = paymentRepository;
@@ -49,13 +49,17 @@ namespace FastBuy.Payments.Api.Services.Implementations
                 if (order.Amount != paymentDto.Amount)
                     throw new BusinessException("The amount entered is different from the amount to be paid");
 
-                //await _paymentRepository.CreateAsync(payment);
+                order.Payment.Status = PaymentStates.Completed;
 
-                //await SendSuccessPaymentEvent(payment.OrderId);
+                order.Payment.CreatedAt = DateTime.UtcNow;
+
+                await _paymentRepository.UpdateAsync(order.OrderId, order.Payment);
+
+                await SendSuccessPaymentEvent(order.OrderId);
             }
             catch (BusinessException ex)
             {
-                //await SendFailedPaymentEvent(paymentDto.OrderId, ex.Message ?? string.Empty);
+                await SendFailedPaymentEvent(paymentDto.OrderId, ex.Message ?? string.Empty);
 
                 throw;
             }

@@ -12,7 +12,7 @@ namespace FastBuy.Payments.Api.Mappers
             return new Payment
             {
                 OrderId = dto.OrderId,
-                OrderDate = DateTimeOffset.Now,
+                CreatedAt = DateTimeOffset.Now,
                 Status = status,
             };
         }
@@ -24,7 +24,7 @@ namespace FastBuy.Payments.Api.Mappers
             return new PaymentResponseDto
             {
                 PaymentId = entity.OrderId,
-                CreatedAt = entity.OrderDate,
+                CreatedAt = entity.CreatedAt,
                 Status = entity.Status
             };
         }
