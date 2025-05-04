@@ -24,6 +24,8 @@ namespace FastBuy.Stocks.Services.Consumers
         {
             var message = context.Message;
 
+            _logger.LogInformation($"[SAGA] - Received {nameof(StockIncreaseRequestedEvent)} - {message.CorrelationId}");
+
             var stockItemsIncreased = new List<OrderItem>();
 
             try 
@@ -33,7 +35,7 @@ namespace FastBuy.Stocks.Services.Consumers
                     Expression<Func<StockItem, bool>> filter = x => x.ProductId == item.ProductId;
 
                     var stockItem = await _stockRepository.GetAsync(filter)
-                        ?? throw new NonExistentProductException(message.CorrelationId, $"The product with id {item.ProductId} does not exist");
+                        ?? throw new NonExistentResourceException(message.CorrelationId, $"The product with id {item.ProductId} does not exist");
 
                     stockItem.Stock += item.Quantity;
 
@@ -52,7 +54,7 @@ namespace FastBuy.Stocks.Services.Consumers
                     ctx.CorrelationId = context.CorrelationId;
                 });
 
-                _logger.LogInformation($"[SAGA] - Generate {nameof(StockIncreasedEvent)} - CorrelationId; {message.CorrelationId}");
+                _logger.LogInformation($"[SAGA] - Send {nameof(StockIncreasedEvent)} - CorrelationId; {message.CorrelationId}");
             }
             catch (AsynchronousMessagingException ex)
             {  
@@ -71,7 +73,7 @@ namespace FastBuy.Stocks.Services.Consumers
                     ctx.CorrelationId = context.CorrelationId;
                 });               
 
-                _logger.LogInformation($"[SAGA] - Send {nameof(StockIncreaseFailedEvent)}");
+                _logger.LogInformation($"[SAGA] - Send {nameof(StockIncreaseFailedEvent)} - CorrelationId: {message.CorrelationId}");
 
             }
             catch (Exception ex)

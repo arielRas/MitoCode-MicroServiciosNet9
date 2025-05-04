@@ -11,14 +11,14 @@ namespace FastBuy.Payments.Api.Routes
         {
             var group = app.MapGroup("/api/payments").WithTags("Payments");
 
-            group.MapPost("", Create);
+            group.MapPatch("", ProcessPayment);
 
             group.MapGet("/{id:Guid}", GetById);
 
             return app;
         }
 
-        private static async Task<IResult> Create([FromBody] PaymentRequestDto dto, IPaymentService service)
+        private static async Task<IResult> ProcessPayment([FromBody] PaymentRequestDto dto, IPaymentService service)
         {
             try
             {

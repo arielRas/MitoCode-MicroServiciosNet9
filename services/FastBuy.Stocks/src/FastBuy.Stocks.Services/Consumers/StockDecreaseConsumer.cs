@@ -22,6 +22,8 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
 
     public async Task Consume(ConsumeContext<StockDecreaseRequestedEvent> context)
     {
+        _logger.LogInformation($"[SAGA] - Received {nameof(StockDecreaseRequestedEvent)} - {context.Message.CorrelationId}");
+
         var message = context.Message;
 
         var stockItemsDiscounted = new List<OrderItem>();
@@ -29,7 +31,7 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
         try
         {
             foreach (var item in message.Items)
-            {
+            {            
                 Expression<Func<StockItem, bool>> filter = x => x.ProductId == item.ProductId;
 
                 var stockItem = await _stockRepository.GetAsync(filter)
@@ -55,11 +57,11 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
                 ctx.CorrelationId = context.CorrelationId;
             });
 
-            _logger.LogInformation($"[SAGA] - Generate {nameof(StockDecreasedEvent)}");
+            _logger.LogInformation($"[SAGA] - Send {nameof(StockDecreasedEvent)}");
         }
         catch (AsynchronousMessagingException ex)
         {
-            _logger.LogError($"[SAGA] - Error in asynchronous communication - {ex.Message}");
+            _logger.LogError($"[SAGA] - Error in asynchronous communication - Reason: {ex.Message}");
 
             var stockFailedDecrese = new StockDecreaseFailedEvent
             {
@@ -74,11 +76,11 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
                 ctx.CorrelationId = context.CorrelationId;
             });
 
-            _logger.LogInformation($"[SAGA] - Send {nameof(StockDecreaseFailedEvent)}");
+            _logger.LogInformation($"[SAGA] - Send {nameof(StockDecreaseFailedEvent)} - CorrelationId: {message.CorrelationId}");
         }
         catch (Exception ex)
         {
-            _logger.LogError($"[SAGA] - {DateTime.UtcNow} - Error when trying to decrease stock, correlationID: {message.CorrelationId} - {ex.Message}", ex);
+            _logger.LogError($"[SAGA] - {DateTime.UtcNow} - Error when trying to decrease stock - {ex.Message}", ex);
         }
     }    
 }
