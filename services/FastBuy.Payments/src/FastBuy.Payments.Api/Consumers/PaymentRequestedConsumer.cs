@@ -24,68 +24,68 @@ namespace FastBuy.Payments.Api.Consumers
 
             try
             {
-                _logger.LogInformation($"[SAGA] - Recived {nameof(PaymentRequestedEvent)} - CorrelationId: {message.CorrelationId}");
+                //_logger.LogInformation($"[SAGA] - Recived {nameof(PaymentRequestedEvent)} - CorrelationId: {message.CorrelationId}");
 
-                if (await _unitOfWork.OrderRepository.ExistsAsync(message.OrderId))
-                    throw new ExistingResourceException(message.CorrelationId, $"The order with id {message.OrderId} already exists and is involved in another operation.");
+                //if (await _unitOfWork.OrderRepository.ExistsAsync(message.OrderId))
+                //    throw new ExistingResourceException(message.CorrelationId, $"The order with id {message.OrderId} already exists and is involved in another operation.");
 
-                var order = new Order
-                {
-                    OrderId = message.OrderId,
-                    CreatedAt = DateTime.UtcNow,
-                    Amount = message.Amount
-                };
+                //var order = new Order
+                //{
+                //    OrderId = message.OrderId,
+                //    CreatedAt = DateTime.UtcNow,
+                //    Amount = message.Amount
+                //};
 
-                var payment = new Payment
-                {
-                    OrderId = message.OrderId,
-                    CreatedAt = DateTime.UtcNow,
-                    Status = PaymentStates.Pending
-                };
+                //var payment = new Payment
+                //{
+                //    OrderId = message.OrderId,
+                //    CreatedAt = DateTime.UtcNow,
+                //    Status = PaymentStates.Pending
+                //};
 
-                await _unitOfWork.BeginTransactionAsync();
+                //await _unitOfWork.BeginTransactionAsync();
 
-                await _unitOfWork.OrderRepository.CreateAsync(order);
+                //await _unitOfWork.OrderRepository.CreateAsync(order);
 
-                await _unitOfWork.PaymentRepository.CreateAsync(payment);
+                //await _unitOfWork.PaymentRepository.CreateAsync(payment);
 
-                await _unitOfWork.CommitTransactionAsync();
+                //await _unitOfWork.CommitTransactionAsync();
 
-                _logger.LogInformation($"[SAGA] - A new order has been created - OrderId: {order.OrderId}");
+                //_logger.LogInformation($"[SAGA] - A new order has been created - OrderId: {order.OrderId}");
             }
             catch(AsynchronousMessagingException ex)
             {
-                _logger.LogInformation($"[SAGA] - The order could not be created - Reason: {ex.Message}");
+                //_logger.LogInformation($"[SAGA] - The order could not be created - Reason: {ex.Message}");
 
-                var paymentFailed = new PaymentFailedEvent
-                {
-                    CorrelationId = message.CorrelationId,
-                    Reason = ex.Message
-                };
+                //var paymentFailed = new PaymentFailedEvent
+                //{
+                //    CorrelationId = message.CorrelationId,
+                //    Reason = ex.Message
+                //};
 
-                await context.Publish(paymentFailed, ctx =>
-                {
-                    ctx.CorrelationId = message.CorrelationId;
-                });
+                //await context.Publish(paymentFailed, ctx =>
+                //{
+                //    ctx.CorrelationId = message.CorrelationId;
+                //});
 
-                _logger.LogInformation($"[SAGA] - Send {nameof(PaymentFailedEvent)} - CorrelationId: {message.CorrelationId}");
+                //_logger.LogInformation($"[SAGA] - Send {nameof(PaymentFailedEvent)} - CorrelationId: {message.CorrelationId}");
             }
             catch (Exception ex)
             {
-                await _unitOfWork.RollbackTransactionAsync();
+                //await _unitOfWork.RollbackTransactionAsync();
 
-                var paymentFailed = new PaymentFailedEvent
-                {
-                    CorrelationId = message.CorrelationId,
-                    Reason = ex.Message
-                };
+                //var paymentFailed = new PaymentFailedEvent
+                //{
+                //    CorrelationId = message.CorrelationId,
+                //    Reason = ex.Message
+                //};
 
-                await context.Publish(paymentFailed, ctx =>
-                {
-                    ctx.CorrelationId = message.CorrelationId;
-                });
+                //await context.Publish(paymentFailed, ctx =>
+                //{
+                //    ctx.CorrelationId = message.CorrelationId;
+                //});
 
-                _logger.LogError($"[SAGA] - An unexpected error has occurred - {ex.Message}");
+                //_logger.LogError($"[SAGA] - An unexpected error has occurred - {ex.Message}");
             }
         }
     }
