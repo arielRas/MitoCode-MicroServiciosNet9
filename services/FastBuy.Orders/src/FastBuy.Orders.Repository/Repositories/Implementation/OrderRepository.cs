@@ -12,6 +12,14 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
 
         }
 
+        public async Task<IEnumerable<OrderItem>> GetOrderItemAsync(Guid orderId)
+        {
+            return await dbSet.Include(o => o.OrderItem)
+                              .Where(o => o.OrderId == orderId)
+                              .SelectMany(o => o.OrderItem)
+                              .ToListAsync();
+        }
+
         public async Task<decimal> GetOrderAmountAsync(Guid orderId)
         {
             return await dbSet.Include(o => o.OrderItem)

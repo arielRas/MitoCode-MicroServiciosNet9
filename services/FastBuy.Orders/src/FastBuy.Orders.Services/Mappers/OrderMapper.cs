@@ -58,5 +58,15 @@ namespace FastBuy.Orders.Services.Mappers
             return orderItem;
         }
 
+    
+        //OrderItem(Entity) => OrderItem(Event)
+        public static Shared.Events.Saga.Orders.OrderItem ToEvent(this Repository.Database.Entities.OrderItem entity)
+        {
+            return new Shared.Events.Saga.Orders.OrderItem
+            {
+                ProductId = entity.ProductId,
+                Quantity = entity.Quantity
+            };
+        }
     }
 }
