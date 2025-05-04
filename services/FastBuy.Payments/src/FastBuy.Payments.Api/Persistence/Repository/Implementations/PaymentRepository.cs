@@ -9,5 +9,17 @@ namespace FastBuy.Payments.Api.Persistence.Repository.Implementations
         {
             
         }
+
+        public async Task ProcessPaymentAsync(Guid orderId, string paymentStatus)
+        {
+            var payment = await dbSet.FindAsync(orderId)
+                ?? throw new KeyNotFoundException($"Payment with id {orderId} does not exist");
+
+            payment.LastUpdate = DateTime.UtcNow;
+
+            payment.Status = paymentStatus;
+
+            await _context.SaveChangesAsync();
+        }
     }
 }

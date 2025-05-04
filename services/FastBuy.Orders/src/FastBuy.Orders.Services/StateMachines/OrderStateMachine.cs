@@ -11,7 +11,6 @@ namespace FastBuy.Orders.Services.StateMachines;
 
 public class OrderStateMachine : MassTransitStateMachine<OrderState>
 {
-    private readonly IOrderRepository _orderRepository;
     private readonly ILogger<OrderStateMachine> _logger;
 
     public State Created { get; }
@@ -30,9 +29,8 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
     public Event<PaymentSuccessEvent> PaymentSucces {  get; }
     public Event<PaymentFailedEvent> PaymentFailed { get; }
 
-    public OrderStateMachine(IOrderRepository orderRepository, ILogger<OrderStateMachine> logger)
+    public OrderStateMachine(ILogger<OrderStateMachine> logger)
     {
-        _orderRepository = orderRepository;
         _logger = logger;
         InstanceState(state => state.CurrentState);
         ConfigureEvents();
@@ -179,7 +177,7 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
                 var stockIncrese = new StockIncreaseRequestedEvent
                 {
                     CorrelationId = context.Message.CorrelationId,
-                    Items = (await _orderRepository.GetOrderItemAsync(context.Message.CorrelationId)).Select(oi => oi.ToEvent())
+                    Items = context.Saga.Correlation.OrderItem.Select(oi => oi.ToEvent())
                 };
 
                 await context.Publish(stockIncrese, ctx =>

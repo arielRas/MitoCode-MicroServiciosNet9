@@ -1,5 +1,5 @@
 ﻿using FastBuy.Payments.Api.Entities;
-using FastBuy.Payments.Api.Persistence.UnitOfWork;
+using FastBuy.Payments.Api.Persistence.Repository.Abstractions;
 using FastBuy.Shared.Events.Exceptions;
 using FastBuy.Shared.Events.Saga.Payments;
 using MassTransit;
@@ -8,15 +8,16 @@ namespace FastBuy.Payments.Api.Consumers
 {
     public class PaymentRequestedConsumer : IConsumer<PaymentRequestedEvent>
     {
-        private readonly IPaymentUnitOfWork _unitOfWork;
+        private readonly IPaymentRepository _paymentRepository;
+        private readonly IOrderRepository _orderRepository;
         private readonly ILogger<PaymentRequestedConsumer> _logger;
 
-        public PaymentRequestedConsumer(IPaymentUnitOfWork unitOfWork, ILogger<PaymentRequestedConsumer> logger)
+        public PaymentRequestedConsumer(IPaymentRepository paymentRepository, IOrderRepository orderRepository, ILogger<PaymentRequestedConsumer> logger)
         {
-            _unitOfWork = unitOfWork;
+            _paymentRepository = paymentRepository;
+            _orderRepository = orderRepository;
             _logger = logger;
         }
-
 
         public async Task Consume(ConsumeContext<PaymentRequestedEvent> context)
         {
@@ -24,68 +25,38 @@ namespace FastBuy.Payments.Api.Consumers
 
             try
             {
-                //_logger.LogInformation($"[SAGA] - Recived {nameof(PaymentRequestedEvent)} - CorrelationId: {message.CorrelationId}");
+                _logger.LogInformation($"[SAGA] - Received {nameof(PaymentRequestedEvent)} - CorrelationId: {message.CorrelationId}");
 
-                //if (await _unitOfWork.OrderRepository.ExistsAsync(message.OrderId))
-                //    throw new ExistingResourceException(message.CorrelationId, $"The order with id {message.OrderId} already exists and is involved in another operation.");
+                if (!await _orderRepository.ExistsAsync(message.CorrelationId))
+                    throw new NonExistentResourceException(message.CorrelationId, $"The order with id {message.CorrelationId} to which the payment refers does not exist");
 
-                //var order = new Order
-                //{
-                //    OrderId = message.OrderId,
-                //    CreatedAt = DateTime.UtcNow,
-                //    Amount = message.Amount
-                //};
+                var payment = new Payment
+                {
+                    OrderId = message.CorrelationId,
+                    CreatedAt = DateTime.UtcNow,
+                    LastUpdate = DateTime.UtcNow,
+                    Status = PaymentStatus.Pending,
+                };
 
-                //var payment = new Payment
-                //{
-                //    OrderId = message.OrderId,
-                //    CreatedAt = DateTime.UtcNow,
-                //    Status = PaymentStates.Pending
-                //};
+                await _paymentRepository.CreateAsync(payment);
 
-                //await _unitOfWork.BeginTransactionAsync();
-
-                //await _unitOfWork.OrderRepository.CreateAsync(order);
-
-                //await _unitOfWork.PaymentRepository.CreateAsync(payment);
-
-                //await _unitOfWork.CommitTransactionAsync();
-
-                //_logger.LogInformation($"[SAGA] - A new order has been created - OrderId: {order.OrderId}");
+                _logger.LogInformation($"[SAGA] - A new Payment has been created - OrderId: {payment.OrderId}");
             }
-            catch(AsynchronousMessagingException ex)
+            catch (AsynchronousMessagingException ex)
             {
-                //_logger.LogInformation($"[SAGA] - The order could not be created - Reason: {ex.Message}");
+                var paymentFailed = new PaymentFailedEvent { CorrelationId = message.CorrelationId };
 
-                //var paymentFailed = new PaymentFailedEvent
-                //{
-                //    CorrelationId = message.CorrelationId,
-                //    Reason = ex.Message
-                //};
+                await context.Publish(paymentFailed, ctx =>
+                {
+                    ctx.CorrelationId = message.CorrelationId;
+                });
 
-                //await context.Publish(paymentFailed, ctx =>
-                //{
-                //    ctx.CorrelationId = message.CorrelationId;
-                //});
+                _logger.LogInformation($"[SAGA] - Send {nameof(PaymentFailedEvent)} - CorrelationId: {message.CorrelationId} - Reason: {ex.Message}");
 
-                //_logger.LogInformation($"[SAGA] - Send {nameof(PaymentFailedEvent)} - CorrelationId: {message.CorrelationId}");
             }
             catch (Exception ex)
             {
-                //await _unitOfWork.RollbackTransactionAsync();
-
-                //var paymentFailed = new PaymentFailedEvent
-                //{
-                //    CorrelationId = message.CorrelationId,
-                //    Reason = ex.Message
-                //};
-
-                //await context.Publish(paymentFailed, ctx =>
-                //{
-                //    ctx.CorrelationId = message.CorrelationId;
-                //});
-
-                //_logger.LogError($"[SAGA] - An unexpected error has occurred - {ex.Message}");
+                _logger.LogError($"[SAGA] - An unexpected error has occurred - {ex.Message}");
             }
         }
     }

@@ -2,7 +2,6 @@
 using FastBuy.Payments.Api.Persistence;
 using FastBuy.Payments.Api.Persistence.Repository.Abstractions;
 using FastBuy.Payments.Api.Persistence.Repository.Implementations;
-using FastBuy.Payments.Api.Persistence.UnitOfWork;
 using FastBuy.Payments.Api.Services.Abstractions;
 using FastBuy.Payments.Api.Services.Implementations;
 using FastBuy.Shared.Events.Exceptions;
@@ -36,7 +35,7 @@ namespace FastBuy.Payments.Api.Extensions
             //BrokerMessage register
             services.AddMessageBroker(
                 configuration,
-                typeof(PaymentRequestedConsumer).Assembly,
+                typeof(OrderCreateConsumer).Assembly,
                 retryConfigurator =>
                 {
                     retryConfigurator.Interval(3, TimeSpan.FromSeconds(4));
@@ -50,7 +49,6 @@ namespace FastBuy.Payments.Api.Extensions
             services.AddScoped<IOrderService, OrderService>();
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             services.AddScoped<IPaymentService, PaymentService>();
-            services.AddScoped<IPaymentUnitOfWork, PaymentUnitOfWork>();
 
 
             return services;
