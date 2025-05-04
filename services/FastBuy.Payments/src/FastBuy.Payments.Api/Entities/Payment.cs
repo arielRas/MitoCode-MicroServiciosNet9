@@ -9,7 +9,9 @@ namespace FastBuy.Payments.Api.Entities
         public Guid OrderId { get; set; }
 
         [Required]
-        public DateTimeOffset CreatedAt { get; set; }
+        public DateTimeOffset OrderDate { get; set; }
+
+        public DateTimeOffset? PaymentDate { get; set; }
 
         [Required]
         public required string Status { get; set; }

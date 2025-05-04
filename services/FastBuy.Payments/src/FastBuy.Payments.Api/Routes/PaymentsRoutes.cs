@@ -22,7 +22,7 @@ namespace FastBuy.Payments.Api.Routes
         {
             try
             {
-                await service.CreateAsync(dto);
+                await service.ProcessPaymentAsync(dto);
 
                 return Results.Accepted();
             }

@@ -1,4 +1,5 @@
 ﻿using FastBuy.Payments.Api.DTOs;
+using FastBuy.Payments.Api.Entities;
 using FastBuy.Payments.Api.Exceptions;
 using FastBuy.Payments.Api.Mappers;
 using FastBuy.Payments.Api.Persistence.Repository.Abstractions;
@@ -28,29 +29,33 @@ namespace FastBuy.Payments.Api.Services.Implementations
             var payment = await _paymentRepository.GetByIdAsync(id)
                 ?? throw new KeyNotFoundException($"Payment with id {id} does not exist");
 
-            return payment.ToDto();            
+            return payment.ToDto();
         }
 
 
-        public async Task CreateAsync(PaymentRequestDto paymentDto)
+        public async Task ProcessPaymentAsync(PaymentRequestDto paymentDto)
         {
             try
             {
-                var order = await _orderRepository.GetByIdAsync(paymentDto.OrderId)
+                var order = await _orderRepository.GetOrderWithPaymentAsync(paymentDto.OrderId)
                     ?? throw new KeyNotFoundException($"The order with id {paymentDto.OrderId} does not exist");
+
+                if (order.Payment!.Status == PaymentStates.Completed)
+                    throw new BusinessException("The order you are trying to pay already has a payment processed");
+
+                if (order.Payment!.Status == PaymentStates.Rejected)
+                    throw new BusinessException("The order you are trying to pay is canceled due to a previous failed payment.");
 
                 if (order.Amount != paymentDto.Amount)
                     throw new BusinessException("The amount entered is different from the amount to be paid");
 
-                var payment = paymentDto.ToEntity();
+                //await _paymentRepository.CreateAsync(payment);
 
-                await _paymentRepository.CreateAsync(payment);
-
-                await SendSuccessPaymentEvent(payment.OrderId);
+                //await SendSuccessPaymentEvent(payment.OrderId);
             }
-            catch(BusinessException ex)
+            catch (BusinessException ex)
             {
-                await SendFailedPaymentEvent(paymentDto.OrderId, ex.Message ?? string.Empty);
+                //await SendFailedPaymentEvent(paymentDto.OrderId, ex.Message ?? string.Empty);
 
                 throw;
             }
