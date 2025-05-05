@@ -1,5 +1,5 @@
 services:
-  mongo:
+  Mongo:
     image: mongodb/mongodb-community-server
     container_name: MongoDb
     ports:
@@ -19,7 +19,20 @@ services:
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     hostname: rabbitmq
+  
+  Sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: SqlServer
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Abc12345"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
 
 volumes:
   mongo_data:
   rabbitmq_data:
+  sqlserver_data:
