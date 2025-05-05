@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastBuy.Shared.library" Version="1.0.18" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+    <PackageReference Include="Microsoft.Extensions.Http.polly" Version="9.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
+    <ProjectReference Include="..\FastBuy.Stocks.Repositories\FastBuy.Stocks.Repositories.csproj" />
+    <ProjectReference Include="..\FastBuy.Stocks.Services\FastBuy.Stocks.Services.csproj" />
+  </ItemGroup>
+
+</Project>

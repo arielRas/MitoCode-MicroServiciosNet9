@@ -1,0 +1,38 @@
+services:
+  Mongo:
+    image: mongodb/mongodb-community-server
+    container_name: MongoDb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: 123456
+  
+  RabbitMq:
+    image: rabbitmq:4.0.7-management
+    container_name: RabbitMQ
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    hostname: rabbitmq
+  
+  Sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: SqlServer
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Abc12345"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    restart: unless-stopped
+
+volumes:
+  mongo_data:
+  rabbitmq_data:
+  sqlserver_data:

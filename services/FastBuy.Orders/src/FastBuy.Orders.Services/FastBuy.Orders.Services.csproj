@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FastBuy.Orders.Contracts\FastBuy.Orders.Contracts.csproj" />
+    <ProjectReference Include="..\FastBuy.Orders.Repository\FastBuy.Orders.Repository.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FastBuy.Shared.Events" Version="1.0.12" />
+  </ItemGroup>
+
+</Project>
