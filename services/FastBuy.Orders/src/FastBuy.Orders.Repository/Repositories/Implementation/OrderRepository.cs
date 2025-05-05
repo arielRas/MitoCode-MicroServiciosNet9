@@ -28,5 +28,22 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
                               .SelectMany(o => o.OrderItem)
                               .SumAsync(oi => oi.Product.Price * oi.Quantity);
         }
+
+        public async Task<Order> GetOrderWithRelationshipsAsync(Guid orderId)
+        {
+            return await dbSet.Include(o => o.OrderItem)
+                                 .ThenInclude(oi => oi.Product)   
+                              .Where (o => o.OrderId == orderId)
+                              .FirstOrDefaultAsync()
+                              ?? throw new KeyNotFoundException($"The order with in {orderId} does not exist"); 
+        }
+
+        public async Task<string?> GetOrderStateAsync(Guid orderId)
+        {
+            return await dbSet.Include(o => o.OrderState)
+                              .Where(o => o.OrderId == orderId)
+                              .Select(o => o.OrderState.CurrentState)
+                              .FirstOrDefaultAsync();
+        }
     }
 }

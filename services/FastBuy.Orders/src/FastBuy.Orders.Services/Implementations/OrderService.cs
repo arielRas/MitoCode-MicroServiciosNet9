@@ -17,6 +17,16 @@ namespace FastBuy.Orders.Services.Implementations
             _publisher = publisher;
         }
 
+        public async Task<OrderResponseDto> GetByIdAsync(Guid id)
+        {
+            var order = (await _orderRepository.GetOrderWithRelationshipsAsync(id)).ToDto();
+
+            order.State = await _orderRepository.GetOrderStateAsync(id) ?? "Order status is not available";
+
+            return order;
+
+        }
+
         public async Task CreateAsync(OrderRequestDto orderDto)
         {
             var newOrder = orderDto.ToEntity();
@@ -31,6 +41,6 @@ namespace FastBuy.Orders.Services.Implementations
             {
                 ctx.CorrelationId = orderCreateEvent.CorrelationId;
             });
-        }
+        }        
     }
 }

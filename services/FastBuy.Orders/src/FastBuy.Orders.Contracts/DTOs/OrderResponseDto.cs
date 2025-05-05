@@ -8,6 +8,8 @@
 
         public DateTimeOffset CreatedAt { get; set; }
 
+        public decimal Amount { get; set; }
+
         public required List<OrderItemResponseDto> OrderItems { get; set; }
     }
 }

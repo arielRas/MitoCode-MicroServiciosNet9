@@ -6,6 +6,19 @@ namespace FastBuy.Orders.Services.Mappers
 {
     internal static class OrderMapper
     {
+        //Order => OrderResponseDto
+        public static OrderResponseDto ToDto(this Order entity)
+        {
+            return new OrderResponseDto
+            {
+                Id = entity.OrderId,
+                State = String.Empty,
+                OrderItems = entity.OrderItem.Select(oi => oi.ToDto()).ToList(),
+                CreatedAt = entity.CreateAt,
+                Amount = entity.OrderItem.Sum(oi => oi.Quantity * oi.Product.Price)
+            };
+        }
+
         //OrderRequestDto => Order
         public static Order ToEntity(this OrderRequestDto dto)
         {
@@ -15,7 +28,6 @@ namespace FastBuy.Orders.Services.Mappers
 
             return order;
         }
-
 
         //Order => OrderCreatedEvent
         public static OrderCreatedEvent ToOrderCreateEvent(this Order entity, decimal amount)
@@ -43,6 +55,16 @@ namespace FastBuy.Orders.Services.Mappers
             };
         }
 
+        //OrderItem(Entity) => OrderItemResponseDto
+        public static OrderItemResponseDto ToDto(this Repository.Database.Entities.OrderItem entity)
+        {
+            return new OrderItemResponseDto
+            {
+                ProductId = entity.ProductId,
+                ProductName = entity.Product.Name,
+                Quantity = entity.Quantity,
+            };
+        }
 
         //OrderItemRequestDto => OrderItem (DB Entity)
         public static Repository.Database.Entities.OrderItem ToEntity(this OrderItemRequestDto dto, Order? order = null)
@@ -57,8 +79,7 @@ namespace FastBuy.Orders.Services.Mappers
 
             return orderItem;
         }
-
-    
+            
         //OrderItem(Entity) => OrderItem(Event)
         public static Shared.Events.Saga.Orders.OrderItem ToEvent(this Repository.Database.Entities.OrderItem entity)
         {

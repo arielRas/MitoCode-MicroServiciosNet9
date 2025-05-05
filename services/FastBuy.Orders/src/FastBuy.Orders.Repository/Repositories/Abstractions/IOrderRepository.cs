@@ -6,5 +6,7 @@ namespace FastBuy.Orders.Repository.Repositories.Abstractions
     {
         Task<decimal> GetOrderAmountAsync(Guid orderId);
         Task<IEnumerable<OrderItem>> GetOrderItemAsync(Guid orderId);
+        Task<Order> GetOrderWithRelationshipsAsync(Guid orderId);
+        Task<string?> GetOrderStateAsync(Guid orderId);
     }
 }

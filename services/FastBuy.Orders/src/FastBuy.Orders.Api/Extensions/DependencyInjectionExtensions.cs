@@ -27,6 +27,10 @@ namespace FastBuy.Orders.Api.Extensions
             services.AddMessageBroker(configuration);
 
 
+            //Authentication configure and register
+            services.AddJwtBearerAuthentication(configuration);
+
+
             //Services and Repository registration
             services.AddScoped<IProductRepository, ProductRepository>();
             services.AddScoped<IOrderRepository, OrderRepository>();
