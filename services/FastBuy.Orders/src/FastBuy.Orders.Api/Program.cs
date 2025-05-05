@@ -1,5 +1,6 @@
 
 using FastBuy.Orders.Api.Extensions;
+using FastBuy.Orders.Api.Middlewares;
 
 namespace FastBuy.Orders.Api
 {
@@ -24,6 +25,8 @@ namespace FastBuy.Orders.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();            
 
             app.MapControllers();
 

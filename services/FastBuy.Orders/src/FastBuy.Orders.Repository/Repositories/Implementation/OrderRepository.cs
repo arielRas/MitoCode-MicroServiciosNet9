@@ -42,7 +42,7 @@ namespace FastBuy.Orders.Repository.Repositories.Implementation
         {
             return await dbSet.Include(o => o.OrderState)
                               .Where(o => o.OrderId == orderId)
-                              .Select(o => o.OrderState.CurrentState)
+                              .Select(o => o.OrderState!.CurrentState)
                               .FirstOrDefaultAsync();
         }
     }

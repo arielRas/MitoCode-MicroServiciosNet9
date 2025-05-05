@@ -18,16 +18,9 @@ namespace FastBuy.Payments.Api.Routes
 
         private static async Task<IResult> GetById([FromRoute] Guid id, IOrderService service)
         {
-            try
-            {
-                var order = await service.GetOrderAsync(id);
+            var order = await service.GetOrderAsync(id);
 
-                return Results.Ok(order);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return Results.NotFound(ex.Message);
-            }
+            return Results.Ok(order);
         }
     }
 }

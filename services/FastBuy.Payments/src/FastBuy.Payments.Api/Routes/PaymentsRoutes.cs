@@ -22,34 +22,16 @@ namespace FastBuy.Payments.Api.Routes
 
         private static async Task<IResult> ProcessPayment([FromBody] PaymentRequestDto dto, IPaymentService service)
         {
-            try
-            {
-                await service.ProcessPaymentAsync(dto);
+            await service.ProcessPaymentAsync(dto);
 
-                return Results.Accepted();
-            }
-            catch(KeyNotFoundException ex)
-            {
-                return Results.NotFound(ex.Message);
-            }
-            catch (BusinessException ex)
-            {
-                return Results.BadRequest(ex.Message);
-            }
+            return Results.Accepted();
         }
 
         private static async Task<IResult> GetById([FromRoute] Guid id, IPaymentService service)
         {
-            try
-            {
-                var payment = await service.GetByIdAsync(id);
+            var payment = await service.GetByIdAsync(id);
 
-                return Results.Ok(payment);
-            }
-            catch (KeyNotFoundException ex)
-            {
-                return Results.NotFound(ex.Message);
-            }
+            return Results.Ok(payment);
         }
     }
 }

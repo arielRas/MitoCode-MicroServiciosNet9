@@ -1,5 +1,6 @@
 
 using FastBuy.Payments.Api.Extensions;
+using FastBuy.Payments.Api.Middlewares;
 using FastBuy.Payments.Api.Routes;
 
 namespace FastBuy.Payments.Api
@@ -26,6 +27,8 @@ namespace FastBuy.Payments.Api
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<GlobalExceptionMiddleware>();
 
             app.MapPaymentsRoute();
 
