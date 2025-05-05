@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.3" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\FastBuy.Stocks.Contracts\FastBuy.Stocks.Contracts.csproj" />
     <ProjectReference Include="..\FastBuy.Stocks.Entities\FastBuy.Stocks.Entities.csproj" />
   </ItemGroup>
