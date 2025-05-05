@@ -177,7 +177,7 @@ public class OrderStateMachine : MassTransitStateMachine<OrderState>
                 var stockIncrese = new StockIncreaseRequestedEvent
                 {
                     CorrelationId = context.Message.CorrelationId,
-                    Items = context.Saga.Correlation.OrderItem.Select(oi => oi.ToEvent())
+                    Items = context.Saga.Order.OrderItem.Select(oi => oi.ToEvent())
                 };
 
                 await context.Publish(stockIncrese, ctx =>

@@ -44,7 +44,11 @@ namespace FastBuy.Payments.Api.Consumers
             }
             catch (AsynchronousMessagingException ex)
             {
-                var paymentFailed = new PaymentFailedEvent { CorrelationId = message.CorrelationId };
+                var paymentFailed = new PaymentFailedEvent 
+                {
+                    CorrelationId = message.CorrelationId,
+                    Reason = ex.Message
+                };
 
                 await context.Publish(paymentFailed, ctx =>
                 {

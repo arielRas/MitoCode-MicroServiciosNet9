@@ -35,7 +35,7 @@ public class StockDecreaseConsumer : IConsumer<StockDecreaseRequestedEvent>
                 Expression<Func<StockItem, bool>> filter = x => x.ProductId == item.ProductId;
 
                 var stockItem = await _stockRepository.GetAsync(filter)
-                    ?? throw new NonExistentProductException(message.CorrelationId, $"The product with id {item.ProductId} does not exist");
+                    ?? throw new NonExistentResourceException(message.CorrelationId, $"The product with id {item.ProductId} does not exist");
 
                 if (item.Quantity > stockItem.Stock)
                     throw new InsufficientStockException(message.CorrelationId, $"Insufficient stock for productId: {item.ProductId}");

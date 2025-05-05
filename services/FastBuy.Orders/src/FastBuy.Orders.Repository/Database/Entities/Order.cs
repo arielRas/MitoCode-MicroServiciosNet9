@@ -16,6 +16,6 @@ public partial class Order
     [InverseProperty("Order")]
     public virtual ICollection<OrderItem> OrderItem { get; set; } = new List<OrderItem>();
 
-    [InverseProperty("Correlation")]
+    [InverseProperty("Order")]
     public virtual OrderState? OrderState { get; set; }
 }

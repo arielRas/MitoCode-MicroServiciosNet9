@@ -26,5 +26,5 @@ public partial class OrderState : SagaStateMachineInstance
 
     [ForeignKey("CorrelationId")]
     [InverseProperty("OrderState")]
-    public virtual Order Correlation { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 }

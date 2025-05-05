@@ -31,7 +31,8 @@ public partial class OrdersDbContext : DbContext
     {
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.Property(e => e.OrderId).HasDefaultValueSql("(newid())");
+            entity.Property(o => o.OrderId).HasDefaultValueSql("(newid())");
+            entity.Navigation(o => o.OrderItem).AutoInclude();
         });
 
         modelBuilder.Entity<OrderItem>(entity =>
@@ -49,9 +50,11 @@ public partial class OrdersDbContext : DbContext
         {
             entity.Property(e => e.CorrelationId).ValueGeneratedNever();
 
-            entity.HasOne(d => d.Correlation).WithOne(p => p.OrderState)
+            entity.HasOne(d => d.Order).WithOne(p => p.OrderState)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ORDER_STATE_ORDER");
+
+            entity.Navigation(os => os.Order).AutoInclude();
         });
 
         modelBuilder.Entity<Product>(entity =>
