@@ -9,7 +9,9 @@ namespace FastBuy.Payments.Api.Routes
     {
         public static IApplicationBuilder MapPaymentsRoute(this WebApplication app)
         {
-            var group = app.MapGroup("/api/payments").WithTags("Payments");
+            var group = app.MapGroup("/api/payments")
+                           .RequireAuthorization(policy => policy.RequireRole("Admin"))
+                           .WithTags("Payments");
 
             group.MapPatch("", ProcessPayment);
 

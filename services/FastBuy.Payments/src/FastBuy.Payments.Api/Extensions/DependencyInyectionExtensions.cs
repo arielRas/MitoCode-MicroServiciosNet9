@@ -8,6 +8,7 @@ using FastBuy.Shared.Events.Exceptions;
 using FastBuy.Shared.Library.Configurations;
 using FastBuy.Shared.Library.Messaging;
 using FastBuy.Shared.Library.Repository.Factories;
+using FastBuy.Shared.Library.Security;
 using MassTransit;
 
 namespace FastBuy.Payments.Api.Extensions
@@ -42,6 +43,9 @@ namespace FastBuy.Payments.Api.Extensions
                     retryConfigurator.Ignore(typeof(AsynchronousMessagingException));
                 }
              );
+
+            //Jwt configure and register
+            services.AddJwtBearerAuthentication();
 
 
             //Services register
