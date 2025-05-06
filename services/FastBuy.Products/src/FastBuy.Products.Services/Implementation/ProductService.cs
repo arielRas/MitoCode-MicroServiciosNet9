@@ -5,18 +5,21 @@ using FastBuy.Products.Services.Mappers;
 using FastBuy.Shared.Events.Events.Products;
 using FastBuy.Shared.Library.Repository.Abstractions;
 using MassTransit;
+using Microsoft.Extensions.Logging;
 
 namespace FastBuy.Products.Services.Implementation
 {
     public class ProductService : IProductService
     {
         private readonly IRepository<Product> _repository;
+        private readonly ILogger  _logger;
         private readonly IPublishEndpoint _publisher;
 
-        public ProductService(IRepository<Product> repository, IPublishEndpoint publisher)
+        public ProductService(IRepository<Product> repository, ILogger<ProductService> logger ,IPublishEndpoint publisher)
         {
             _repository = repository;
             _publisher = publisher;
+            _logger = logger;
         }
 
         public async Task<ProductResponseDto> GetByIdAsync(Guid id)
@@ -38,7 +41,7 @@ namespace FastBuy.Products.Services.Implementation
 
             await _repository.CreateAsync(newProduct);
 
-            await _publisher.Publish(newProduct.ToChangeEvent());
+            await PublishEvent(newProduct.ToChangeEvent());
 
             return newProduct.ToDto();
         }
@@ -51,14 +54,21 @@ namespace FastBuy.Products.Services.Implementation
 
             await _repository.UpdateAsync(id, product);
 
-            await _publisher.Publish(product.ToChangeEvent());
+            await PublishEvent(product.ToChangeEvent());
         }
 
         public async Task DeleteAsync(Guid id)
         {
             await _repository.DeleteAsync(id);
 
-            await _publisher.Publish(new ProductDeletedEvent { Id = id});
+            await PublishEvent(new ProductDeletedEvent { Id = id});
+        }        
+
+        private async Task PublishEvent<T>(T eventEntity) where T : class
+        {
+            await _publisher.Publish(eventEntity);
+
+            _logger.LogInformation($"[ASYNC-EVENT] - Send {eventEntity.GetType().Name}");
         }
     }
 }
